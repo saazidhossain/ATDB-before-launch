@@ -49,16 +49,16 @@ export default function StandardsStrip() {
               <Link
                 to="/about"
                 aria-label={`${it.code} — ${it.label}`}
-                className={`group flex items-center gap-4 glass-card glass-hover rounded-2xl p-5 ring-1 ${it.ring} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
+                className={`group flex items-start gap-4 glass-card glass-hover rounded-2xl p-5 ring-1 ${it.ring} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background h-full`}
               >
                 <span className="w-12 h-12 rounded-full bg-white/[0.04] ring-1 ring-white/10 flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 group-focus-visible:scale-105">
                   <it.icon className={`w-6 h-6 ${it.tone}`} aria-hidden="true" />
                 </span>
-                <span className="min-w-0">
-                  <span className="block text-[11px] tracking-[0.22em] text-white/50">
+                <span className="min-w-0 flex-1 flex flex-col justify-center">
+                  <span className="block text-[11px] tracking-[0.22em] text-white/50 mb-1">
                     {it.code}
                   </span>
-                  <span className="block text-sm font-semibold text-white/85 truncate">
+                  <span className="block text-sm font-semibold text-white/85 leading-snug break-words">
                     {it.label}
                   </span>
                 </span>
