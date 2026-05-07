@@ -7,6 +7,7 @@ import EquipmentCategories from "@/components/home/EquipmentCategories";
 import FeaturedEquipment from "@/components/home/FeaturedEquipment";
 import LiveFleetPhotos from "@/components/home/LiveFleetPhotos";
 import ProjectHighlights from "@/components/home/ProjectHighlights";
+import StandardsStrip from "@/components/home/StandardsStrip";
 
 /**
  * SAFE-LAZY POLICY
@@ -48,6 +49,7 @@ export default function Index() {
         <WhyATDB />
       </Suspense>
       <ProjectHighlights />
+      <StandardsStrip />
       <Suspense fallback={<Reserve minHeight={300} />}>
         <CTASection />
       </Suspense>

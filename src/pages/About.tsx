@@ -96,14 +96,17 @@ export default function About() {
             ].map(c => (
               <div
                 key={c.title as string}
-                className="group glass-card glass-hover card-tilt rounded-2xl p-5 sm:p-6 relative overflow-hidden text-center w-full max-w-sm"
+                tabIndex={0}
+                role="group"
+                aria-label={`${c.code} — ${c.title}`}
+                className="group glass-card glass-hover card-tilt rounded-2xl p-5 sm:p-6 relative overflow-hidden text-center w-full max-w-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:-translate-y-0.5 focus-visible:-translate-y-0.5 transition-transform"
               >
                 <div
                   aria-hidden
-                  className={`pointer-events-none absolute -top-16 -right-16 w-48 h-48 rounded-full bg-gradient-to-br ${c.ring} blur-3xl opacity-70 group-hover:opacity-100 transition-opacity duration-500`}
+                  className={`pointer-events-none absolute -top-16 -right-16 w-48 h-48 rounded-full bg-gradient-to-br ${c.ring} blur-3xl opacity-70 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-500`}
                 />
                 <div className="relative flex flex-col items-center">
-                  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white/[0.04] ring-1 ring-white/10 backdrop-blur-sm flex items-center justify-center p-2 shadow-lg shadow-black/30 transition-transform duration-500 group-hover:scale-105">
+                  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white/[0.04] ring-1 ring-white/10 backdrop-blur-sm flex items-center justify-center p-2 shadow-lg shadow-black/30 transition-transform duration-500 group-hover:scale-105 group-focus-visible:scale-105">
                     <img
                       src={c.img}
                       alt={c.alt as string}

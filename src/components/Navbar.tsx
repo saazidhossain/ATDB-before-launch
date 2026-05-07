@@ -73,7 +73,7 @@ export default function Navbar() {
             <a href="mailto:saifulaapi@gmail.com" className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors">
               <Mail className="w-4 h-4" />
             </a>
-            <a href={getWhatsAppQuoteUrl()} target="_blank" rel="noopener noreferrer" className="ml-2 flex items-center gap-2 px-5 py-2.5 rounded-full bg-green-600 text-white text-sm font-semibold hover:bg-green-500 transition-all shadow-lg hover:shadow-green-500/25">
+            <a href={getWhatsAppQuoteUrl()} target="_blank" rel="noopener noreferrer" className="ml-2 flex items-center gap-2 px-5 py-2.5 rounded-full bg-orange-500 text-white text-sm font-semibold hover:bg-orange-400 transition-all shadow-lg shadow-orange-500/25 hover:shadow-orange-400/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
               <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
               {t("Get Quote", "কোটেশন নিন")}
             </a>

@@ -96,8 +96,8 @@ export default function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="relative border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col-reverse sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+      <div className="relative border-t border-white/5 pb-20 sm:pb-5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 pr-20 sm:pr-6 lg:pr-8 flex flex-col-reverse sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
           <a
             href="https://behance.net/saazidhossain"
             target="_blank"
