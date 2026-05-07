@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { LangProvider } from "@/hooks/useLang";
 import { CartProvider } from "@/hooks/useCart";
 import CartDrawer from "@/components/CartDrawer";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import Index from "./pages/Index";
 
 // Code-split non-landing routes — keeps the initial JS bundle small
