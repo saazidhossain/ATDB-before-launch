@@ -45,23 +45,25 @@ export default function StandardsStrip() {
 
         <ul className="list-none grid grid-cols-1 sm:grid-cols-3 gap-4 p-0 m-0">
           {items.map((it) => (
-            <li key={it.code as string} className="list-none">
+            <li key={it.code as string} className="list-none w-full">
               <Link
                 to="/about"
                 aria-label={`${it.code} — ${it.label}`}
-                className={`group flex items-start gap-4 glass-card glass-hover rounded-2xl p-5 ring-1 ${it.ring} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background h-full`}
+                className={`group block w-full h-full glass-card glass-hover rounded-2xl p-5 ring-1 ${it.ring} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
               >
-                <span className="w-12 h-12 rounded-full bg-white/[0.04] ring-1 ring-white/10 flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 group-focus-visible:scale-105">
-                  <it.icon className={`w-6 h-6 ${it.tone}`} aria-hidden="true" />
-                </span>
-                <span className="min-w-0 flex-1 flex flex-col justify-center">
-                  <span className="block text-[11px] tracking-[0.22em] text-white/50 mb-1">
-                    {it.code}
+                <div className="flex items-start gap-4 w-full">
+                  <span className="w-12 h-12 rounded-full bg-white/[0.04] ring-1 ring-white/10 flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 group-focus-visible:scale-105">
+                    <it.icon className={`w-6 h-6 ${it.tone}`} aria-hidden="true" />
                   </span>
-                  <span className="block text-sm font-semibold text-white/85 leading-snug break-words">
-                    {it.label}
-                  </span>
-                </span>
+                  <div className="min-w-0 flex-1 flex flex-col justify-center">
+                    <span className="block text-[11px] tracking-[0.22em] text-white/50 mb-1 break-words">
+                      {it.code}
+                    </span>
+                    <span className="block text-sm font-semibold text-white/85 leading-snug break-words">
+                      {it.label}
+                    </span>
+                  </div>
+                </div>
               </Link>
             </li>
           ))}
