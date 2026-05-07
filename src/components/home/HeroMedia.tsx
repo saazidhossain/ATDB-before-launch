@@ -146,7 +146,7 @@ export default function HeroMedia() {
                 <source src={s.webm} type="video/webm" />
                 <source src={s.mp4} type="video/mp4" />
               </video>
-            ) : mount ? (
+            ) : mount && s.kind === "image" ? (
               <img
                 src={s.src}
                 alt=""
