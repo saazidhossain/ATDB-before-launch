@@ -66,7 +66,7 @@ export default function Index() {
       <SectionDivider />
       <RevealOnScroll><ProjectHighlights /></RevealOnScroll>
       <SectionDivider />
-      <RevealOnScroll><StandardsStrip /></RevealOnScroll>
+      <RevealOnScroll className="block w-full max-w-full overflow-hidden"><StandardsStrip /></RevealOnScroll>
       <SectionDivider />
       <Suspense fallback={<Reserve minHeight={300} />}>
         <RevealOnScroll><CTASection /></RevealOnScroll>
