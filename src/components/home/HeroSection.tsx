@@ -1,104 +1,62 @@
+import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getWhatsAppQuoteUrl } from "@/data/equipment";
 import { useLang } from "@/hooks/useLang";
-
-const NOISE_SVG =
-  "data:image/svg+xml;utf8," +
-  encodeURIComponent(
-    `<svg xmlns='http://www.w3.org/2000/svg' width='128' height='128'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>`
-  );
+import HeroMedia from "./HeroMedia";
 
 export default function HeroSection() {
   const { t } = useLang();
-
   return (
-    <section className="atdb-hero">
-      <video
-        className="atdb-hero__video"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        poster="/images/atdb-hero-poster.webp"
-        aria-hidden="true"
-      >
-        <source src="/videos/atdb-hero.mp4" type="video/mp4" />
-      </video>
+    <section className="relative min-h-screen flex items-end pb-20 md:pb-28 overflow-hidden">
+      {/* Cinematic auto-rotating media (videos + stills) */}
+      <HeroMedia />
 
-      <div className="atdb-hero__overlay-gradient" aria-hidden="true" />
-      <div className="atdb-hero__overlay-amber" aria-hidden="true" />
-      <div
-        className="atdb-hero__overlay-noise"
-        aria-hidden="true"
-        style={{ backgroundImage: `url("${NOISE_SVG}")` }}
-      />
+      {/* Single subtle ambient glow — replaces noisy floating dots */}
+      <div aria-hidden className="pointer-events-none absolute -bottom-24 -left-20 w-[32rem] h-[32rem] rounded-full bg-orange-500/[0.07] blur-3xl" />
 
-      <div className="atdb-hero__content">
-        <div className="atdb-hero__eyebrow atdb-anim-fadeup" style={{ animationDelay: "0.5s" }}>
-          <span className="atdb-hero__eyebrow-line" />
-          <span className="atdb-hero__eyebrow-text">
-            {t("Heavy Equipment Rental", "হেভি ইকুইপমেন্ট রেন্টাল")}
-          </span>
-          <span className="atdb-hero__badge">{t("Nationwide", "সারাদেশ")}</span>
-        </div>
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <p className="text-xs font-mono tracking-[0.3em] text-white/50 uppercase mb-6">
+          {t("Since 2000 · Dhaka & Tangail, Bangladesh", "২০০০ সাল থেকে · ঢাকা ও টাঙ্গাইল, বাংলাদেশ")}
+        </p>
 
-        <h1 className="atdb-hero__headline">
-          <span className="atdb-hero__line">
-            <span className="atdb-anim-linereveal" style={{ animationDelay: "0.65s" }}>
-              {t("Bangladesh's", "বাংলাদেশের")}
-            </span>
-          </span>
-          <span className="atdb-hero__line">
-            <span className="atdb-anim-linereveal" style={{ animationDelay: "0.80s" }}>
-              {t("Premier ", "সেরা ")}
-              <span className="atdb-hero__amber">{t("HEAVY", "হেভি")}</span>
-            </span>
-          </span>
-          <span className="atdb-hero__line">
-            <span className="atdb-anim-linereveal" style={{ animationDelay: "0.95s" }}>
-              {t("Equipment Partner", "ইকুইপমেন্ট পার্টনার")}
-            </span>
-          </span>
+        <h1 className="display-hero max-w-4xl font-display">
+          {t("Bangladesh's premier ", "বাংলাদেশের সেরা ")}
+          <span className="text-shimmer">{t("heavy equipment", "হেভি ইকুইপমেন্ট")}</span>
+          {t(" rental partner.", " রেন্টাল পার্টনার।")}
         </h1>
 
-        <p className="atdb-hero__subtext atdb-anim-fadeup" style={{ animationDelay: "1.1s" }}>
+        <p className="mt-6 text-white/60 text-lg max-w-2xl leading-relaxed">
           {t(
-            "From towering cranes to precision excavators — ATDB delivers industry-grade machinery, on time, on site. Powering infrastructure across Bangladesh since 2008.",
-            "টাওয়ার ক্রেন থেকে নির্ভুল এক্সকাভেটর — এটিডিবি সময়মতো সাইটে ইন্ডাস্ট্রি-গ্রেড মেশিনারি সরবরাহ করে। ২০০৮ সাল থেকে বাংলাদেশের অবকাঠামোতে শক্তি যোগাচ্ছে।"
+            "Professional heavy equipment rental and infrastructure support services for national-scale projects.",
+            "জাতীয় পর্যায়ের প্রকল্পের জন্য পেশাদার হেভি ইকুইপমেন্ট রেন্টাল ও অবকাঠামো সাপোর্ট সার্ভিস।"
           )}
         </p>
 
-        <div className="atdb-hero__cta atdb-anim-fadeup" style={{ animationDelay: "1.25s" }}>
-          <Link to="/equipment" className="atdb-btn atdb-btn--primary">
-            {t("Explore Fleet", "ফ্লিট দেখুন")}
+        <div className="mt-10 flex flex-wrap items-center gap-4">
+          <Link to="/equipment" className="group flex items-center gap-2 px-7 py-3.5 rounded-full bg-orange-500 hover:bg-orange-400 text-white font-semibold text-sm tracking-wide transition-all shadow-lg shadow-orange-500/25 hover:shadow-orange-400/30">
+            {t("BROWSE EQUIPMENT", "ইকুইপমেন্ট দেখুন")}
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
-          <a
-            href={getWhatsAppQuoteUrl()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="atdb-btn atdb-btn--secondary"
-          >
-            ▶ {t("Watch in Action", "অ্যাকশনে দেখুন")}
+          <a href={getWhatsAppQuoteUrl()} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-7 py-3.5 rounded-full glass hover:bg-white/10 text-white font-semibold text-sm tracking-wide transition-all">
+            <span className="w-2 h-2 rounded-full bg-green-500" />
+            {t("WHATSAPP A QUOTE", "হোয়াটসঅ্যাপে কোটেশন")}
           </a>
         </div>
-      </div>
 
-      <div className="atdb-hero__stats atdb-anim-fadeup" style={{ animationDelay: "1.45s" }}>
-        {[
-          { n: "200", plus: true, label: t("Equipment Units", "ইকুইপমেন্ট ইউনিট") },
-          { n: "15", plus: true, label: t("Years Experience", "বছরের অভিজ্ঞতা") },
-          { n: "500", plus: true, label: t("Projects Completed", "প্রজেক্ট সম্পন্ন") },
-          { n: "64", plus: false, label: t("Districts Served", "জেলায় সেবা") },
-        ].map(s => (
-          <div key={s.label} className="atdb-stat">
-            <div className="atdb-stat__num">
-              {s.n}
-              {s.plus && <span className="atdb-hero__amber">+</span>}
+        {/* Stats */}
+        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 max-w-2xl">
+          {[
+            { value: "26+", label: t("Years Experience", "বছরের অভিজ্ঞতা") },
+            { value: "30+", label: t("Equipment Units", "ইকুইপমেন্ট ইউনিট") },
+            { value: "25", label: t("Skilled Staff", "দক্ষ কর্মী") },
+            { value: "2", label: t("Office Locations", "অফিস") },
+          ].map(stat => (
+            <div key={stat.label} className="glass-card rounded-xl p-4 text-center hover:bg-white/10 transition-all">
+              <div className="text-2xl md:text-3xl font-bold text-orange-400">{stat.value}</div>
+              <div className="text-xs text-white/50 mt-1 tracking-wide">{stat.label}</div>
             </div>
-            <div className="atdb-stat__label">{s.label}</div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );
