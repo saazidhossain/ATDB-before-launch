@@ -67,7 +67,7 @@ export default function About() {
           <h2 className="text-3xl md:text-4xl font-bold font-display">{t("Certified, compliant, audit-ready.", "সার্টিফাইড, কমপ্লায়েন্ট, অডিট-প্রস্তুত।")}</h2>
           <p className="text-white/50 mt-3 max-w-2xl">{t("Independently inspected, government-classed and fully documented for tender submissions.", "স্বাধীন পরিদর্শিত, সরকার-শ্রেণিভুক্ত এবং টেন্ডারের জন্য সম্পূর্ণ ডকুমেন্টেড।")}</p>
 
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 justify-items-center">
             {[
               {
                 code: "ISO 9001",
@@ -94,10 +94,16 @@ export default function About() {
                 alt: t("1st Class Contractor & Supplier seal — Govt. of Bangladesh", "১ম শ্রেণির ঠিকাদার সিল — বাংলাদেশ সরকার"),
               },
             ].map(c => (
-              <div key={c.title as string} className="glass-card rounded-2xl p-6 glass-hover relative overflow-hidden text-center">
-                <div aria-hidden className={`absolute -top-16 -right-16 w-48 h-48 rounded-full bg-gradient-to-br ${c.ring} blur-3xl`} />
+              <div
+                key={c.title as string}
+                className="group glass-card glass-hover card-tilt rounded-2xl p-5 sm:p-6 relative overflow-hidden text-center w-full max-w-sm"
+              >
+                <div
+                  aria-hidden
+                  className={`pointer-events-none absolute -top-16 -right-16 w-48 h-48 rounded-full bg-gradient-to-br ${c.ring} blur-3xl opacity-70 group-hover:opacity-100 transition-opacity duration-500`}
+                />
                 <div className="relative flex flex-col items-center">
-                  <div className="w-28 h-28 rounded-full bg-white/[0.04] ring-1 ring-white/10 backdrop-blur-sm flex items-center justify-center p-2 shadow-lg shadow-black/30">
+                  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white/[0.04] ring-1 ring-white/10 backdrop-blur-sm flex items-center justify-center p-2 shadow-lg shadow-black/30 transition-transform duration-500 group-hover:scale-105">
                     <img
                       src={c.img}
                       alt={c.alt as string}
@@ -109,7 +115,7 @@ export default function About() {
                   </div>
                   <p className="text-[11px] tracking-[0.22em] text-white/50 mt-5">{c.code}</p>
                   <p className="font-semibold font-display mt-1">{c.title}</p>
-                  <p className="text-sm text-white/50 mt-1">{c.ref}</p>
+                  <p className="text-sm text-white/50 mt-1 break-words">{c.ref}</p>
                 </div>
               </div>
             ))}
