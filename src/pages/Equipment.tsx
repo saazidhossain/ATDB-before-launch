@@ -76,9 +76,9 @@ export default function EquipmentPage() {
                 <img src={eq.realPhotos?.[0] || eq.image} alt={eq.name} className="image-polish w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/10 to-transparent" />
                 <div className="absolute top-3 left-3 px-3 py-1 rounded-full glass text-xs font-medium text-white/80">{eq.brand}</div>
-                {eq.realPhotos && (
+                {eq.realPhotos && eq.realPhotos.length > 0 && (
                   <div className="absolute top-3 right-3 px-2 py-1 rounded-full bg-green-600/80 backdrop-blur text-[10px] font-semibold text-white flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" /> REAL
+                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" /> {t("REAL", "আসল")}
                   </div>
                 )}
                 {eq.videos && eq.videos.length > 0 && (

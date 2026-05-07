@@ -28,10 +28,10 @@ export default function HeroSection() {
           {t(" rental partner.", " রেন্টাল পার্টনার।")}
         </h1>
 
-        <p className="mt-6 text-white/60 text-lg max-w-xl leading-relaxed">
+        <p className="mt-6 text-white/60 text-lg max-w-2xl leading-relaxed">
           {t(
-            "Cranes · Road Rollers · Excavators · Support Equipment. A certified, government-compliant fleet ready for your next project.",
-            "ক্রেন · রোড রোলার · এক্সক্যাভেটর · সাপোর্ট ইকুইপমেন্ট। সরকার অনুমোদিত, ইন্সপেকশন-সার্টিফাইড ফ্লিট — আপনার পরবর্তী প্রজেক্টের জন্য প্রস্তুত।"
+            "Professional heavy equipment rental and infrastructure support services for national-scale projects.",
+            "জাতীয় পর্যায়ের প্রকল্পের জন্য পেশাদার হেভি ইকুইপমেন্ট রেন্টাল ও অবকাঠামো সাপোর্ট সার্ভিস।"
           )}
         </p>
 
