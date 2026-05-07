@@ -85,15 +85,16 @@ describe("Media gallery layout stability", () => {
     }
   });
 
-  it("changing filters preserves the grid container layout class", () => {
+  it("changing filters preserves the photo grid container layout class", () => {
     const { container } = renderHome();
-    const grid = container.querySelector(".grid.grid-cols-2");
+    // Target the photo grid specifically (it has lg:grid-cols-4; video grid does not).
+    const grid = container.querySelector(".grid.lg\\:grid-cols-4");
     expect(grid).not.toBeNull();
     const beforeCls = grid!.className;
 
     fireEvent.click(screen.getByText("Mobile Cranes"));
 
-    const gridAfter = container.querySelector(".grid.grid-cols-2");
+    const gridAfter = container.querySelector(".grid.lg\\:grid-cols-4");
     expect(gridAfter).not.toBeNull();
     expect(gridAfter!.className).toBe(beforeCls);
   });
