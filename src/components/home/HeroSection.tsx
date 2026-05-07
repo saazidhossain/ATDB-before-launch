@@ -2,17 +2,14 @@ import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getWhatsAppQuoteUrl } from "@/data/equipment";
 import { useLang } from "@/hooks/useLang";
+import HeroMedia from "./HeroMedia";
 
 export default function HeroSection() {
   const { t } = useLang();
   return (
     <section className="relative min-h-screen flex items-end pb-20 md:pb-28 overflow-hidden">
-      {/* Background image */}
-      <div className="absolute inset-0">
-        <img src="/assets/atdb-hero-monument-C3bd27q6.webp" alt="ATDB Trade International — heavy equipment fleet" className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/30" />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-transparent" />
-      </div>
+      {/* Cinematic auto-rotating media (videos + stills) */}
+      <HeroMedia />
 
       {/* Single subtle ambient glow — replaces noisy floating dots */}
       <div aria-hidden className="pointer-events-none absolute -bottom-24 -left-20 w-[32rem] h-[32rem] rounded-full bg-orange-500/[0.07] blur-3xl" />
