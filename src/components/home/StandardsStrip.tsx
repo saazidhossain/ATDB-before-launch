@@ -29,8 +29,8 @@ export default function StandardsStrip() {
   ];
 
   return (
-    <section className="py-14 md:py-20 border-t border-white/5">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-14 md:py-20 border-t border-white/5 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="text-center mb-10">
           <p className="eyebrow mb-3">
             {t("International Standards & Compliance", "আন্তর্জাতিক মান ও কমপ্লায়েন্স")}
@@ -43,7 +43,7 @@ export default function StandardsStrip() {
           </h2>
         </div>
 
-        <ul className="list-none grid grid-cols-1 sm:grid-cols-3 gap-4 p-0 m-0">
+        <ul className="list-none grid grid-cols-1 sm:grid-cols-3 gap-4 p-0 m-0 w-full">
           {items.map((it) => (
             <li key={it.code as string} className="list-none w-full">
               <Link
