@@ -18,24 +18,24 @@ export default function EquipmentCategories() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
           {equipmentCategories.map((cat, i) => (
             <Link
               key={cat.slug}
               to={`/equipment/${cat.slug}`}
-              className={`group relative overflow-hidden rounded-2xl glass-card glass-hover ${i < 2 ? "lg:col-span-1 aspect-[4/3]" : "aspect-[4/3]"}`}
+              className="group relative overflow-hidden rounded-2xl glass-card glass-hover aspect-[4/3] h-full flex"
             >
               <img src={cat.image} alt={cat.label} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
               <div className="absolute inset-0 bg-gradient-to-t from-orange-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative h-full flex flex-col justify-end p-6">
-                <p className="text-orange-300/80 text-xs font-medium mb-1">{lang === "bn" ? cat.label : cat.bangla}</p>
-                <h3 className="text-xl font-bold text-white mb-1 font-display">{lang === "bn" ? cat.bangla : cat.label}</h3>
-                <p className="text-white/50 text-sm">
+              <div className="relative h-full w-full flex flex-col justify-end p-6">
+                <p className="text-orange-300/80 text-xs font-medium mb-1 break-words">{lang === "bn" ? cat.label : cat.bangla}</p>
+                <h3 className="text-xl font-bold text-white mb-1 font-display break-words leading-snug">{lang === "bn" ? cat.bangla : cat.label}</h3>
+                <p className="text-white/50 text-sm break-words">
                   {cat.units} {cat.range && `· ${cat.range}`} · {cat.brands}
                 </p>
                 <div className="mt-4 flex items-center gap-2 text-orange-400 text-xs font-semibold tracking-wider group-hover:gap-3 transition-all">
-                  {t("EXPLORE", "দেখুন")} <ArrowRight className="w-3.5 h-3.5" />
+                  {t("EXPLORE", "দেখুন")} <ArrowRight className="w-3.5 h-3.5 flex-shrink-0" />
                 </div>
               </div>
             </Link>
