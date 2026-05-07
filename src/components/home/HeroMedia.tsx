@@ -3,54 +3,58 @@ import { useEffect, useRef, useState } from "react";
 /**
  * HeroMedia — auto-rotating cinematic background for the hero.
  *
- * Performance strategy:
- * - Mobile / small screens / Save-Data / 2g–3g networks → single optimized
- *   poster image, no videos, no rotation. Keeps LCP fast and bandwidth low.
- * - Desktop / good network → cross-fades between short clips + fleet stills
- *   with a very slow Ken-Burns zoom. Videos use <source> webm + mp4 with
- *   preload="metadata" so only headers + first frame load up front.
- * - Lazy mounts: only the active slide ± 1 ever exists in the DOM.
- * - Respects prefers-reduced-motion (single still, no zoom, no rotation).
- *
- * Tunings (kept long & gentle so transitions never compete with the headline):
- *   IMAGE_MS = 9000   crossfade window for stills
- *   VIDEO_MS = 10000  crossfade window for clips
- *   FADE     = 2000ms opacity transition
- *   Ken-Burns runs at 22s — barely perceptible drift, no zoom “whoosh”.
+ * Performance:
+ * - Lite path for small screens / Save-Data / 2g–3g → single optimized poster.
+ * - Stills use srcSet (768/1280/1920) so phones download ~80 KB instead of ~400 KB.
+ * - Videos ship a 720p variant via <source media="(max-width: 768px)"> alongside 1080p.
+ * - IntersectionObserver gates playback: videos only play while the hero is on screen.
+ * - Adjacent-only mount window + dynamic preload (active = "metadata", neighbor = "none").
+ * - Respects prefers-reduced-motion.
  */
 
 type Slide =
-  | { kind: "video"; webm: string; mp4: string; poster: string }
-  | { kind: "image"; src: string };
+  | { kind: "video"; webm: string; mp4: string; webmSm: string; mp4Sm: string; poster: string }
+  | { kind: "image"; base: string }; // base path (no extension) inside /assets/hero
 
 const SLIDES: Slide[] = [
-  { kind: "image", src: "/assets/atdb-hero-monument-C3bd27q6.webp" },
+  { kind: "image", base: "atdb-hero-monument-C3bd27q6" },
   {
     kind: "video",
     webm: "/videos/cat-320bu-action.webm",
     mp4: "/videos/cat-320bu-action.mp4",
+    webmSm: "/videos/cat-320bu-action-720.webm",
+    mp4Sm: "/videos/cat-320bu-action-720.mp4",
     poster: "/videos/cat-320bu-poster.jpg",
   },
-  { kind: "image", src: "/assets/crane-action-BZ-xESxE.webp" },
+  { kind: "image", base: "crane-action-BZ-xESxE" },
   {
     kind: "video",
     webm: "/videos/honda-rammer-action.webm",
     mp4: "/videos/honda-rammer-action.mp4",
+    webmSm: "/videos/honda-rammer-action-720.webm",
+    mp4Sm: "/videos/honda-rammer-action-720.mp4",
     poster: "/videos/honda-rammer-poster.jpg",
   },
-  { kind: "image", src: "/assets/roller-action-Cnt_eXHu.webp" },
-  { kind: "image", src: "/assets/excavator-action-IVss7I8n.webp" },
+  { kind: "image", base: "roller-action-Cnt_eXHu" },
+  { kind: "image", base: "excavator-action-IVss7I8n" },
 ];
 
-const POSTER_ONLY: string = "/assets/atdb-hero-monument-C3bd27q6.webp";
+const POSTER_ONLY_BASE = "atdb-hero-monument-C3bd27q6";
 
 const IMAGE_MS = 9000;
 const VIDEO_MS = 10000;
 
-/** Decide if we should serve only the lightweight poster image. */
+function imgSrcSet(base: string) {
+  return [768, 1280, 1920]
+    .map(w => `/assets/hero/${base}-${w}.webp ${w}w`)
+    .join(", ");
+}
+function imgFallback(base: string) {
+  return `/assets/hero/${base}-1280.webp`;
+}
+
 function detectLitePath(): boolean {
   if (typeof window === "undefined") return false;
-  // Small screens always get the lite path
   if (window.matchMedia("(max-width: 768px)").matches) return true;
   const conn = (navigator as Navigator & {
     connection?: { saveData?: boolean; effectiveType?: string };
@@ -64,8 +68,10 @@ function detectLitePath(): boolean {
 export default function HeroMedia() {
   const [idx, setIdx] = useState(0);
   const [reduced, setReduced] = useState(false);
-  const [lite, setLite] = useState(true); // assume lite on first paint to keep LCP fast
+  const [lite, setLite] = useState(true);
+  const [inView, setInView] = useState(true);
   const total = SLIDES.length;
+  const rootRef = useRef<HTMLDivElement | null>(null);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
   useEffect(() => {
@@ -83,8 +89,24 @@ export default function HeroMedia() {
     };
   }, []);
 
+  // Viewport gate — pause work when the hero scrolls off screen.
   useEffect(() => {
-    if (reduced || lite) return;
+    const el = rootRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(
+      entries => setInView(entries[0]?.isIntersecting ?? true),
+      { threshold: 0.05 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  // Rotation + active video play/pause
+  useEffect(() => {
+    if (reduced || lite || !inView) {
+      videoRefs.current.forEach(v => v && !v.paused && v.pause());
+      return;
+    }
     const cur = SLIDES[idx];
     const delay = cur.kind === "video" ? VIDEO_MS : IMAGE_MS;
     const t = setTimeout(() => setIdx(i => (i + 1) % total), delay);
@@ -96,14 +118,15 @@ export default function HeroMedia() {
       } catch {/* noop */}
     }
     return () => clearTimeout(t);
-  }, [idx, reduced, lite, total]);
+  }, [idx, reduced, lite, inView, total]);
 
-  // Lite path: single optimized poster, no JS-driven animation, fastest LCP.
   if (lite || reduced) {
     return (
-      <div className="absolute inset-0 overflow-hidden">
+      <div ref={rootRef} className="absolute inset-0 overflow-hidden">
         <img
-          src={POSTER_ONLY}
+          src={imgFallback(POSTER_ONLY_BASE)}
+          srcSet={imgSrcSet(POSTER_ONLY_BASE)}
+          sizes="100vw"
           alt=""
           width={1920}
           height={1080}
@@ -119,11 +142,14 @@ export default function HeroMedia() {
   }
 
   return (
-    <div className="absolute inset-0 overflow-hidden">
+    <div ref={rootRef} className="absolute inset-0 overflow-hidden">
       {SLIDES.map((s, i) => {
         const dist = Math.min(Math.abs(i - idx), total - Math.abs(i - idx));
         const mount = dist <= 1;
         const active = i === idx;
+        // Active video gets metadata preload; the on-deck neighbor stays at "none"
+        // until it becomes active, eliminating wasted metadata fetches per cycle.
+        const preload = active ? "metadata" : "none";
         return (
           <div
             key={i}
@@ -136,19 +162,26 @@ export default function HeroMedia() {
               <video
                 ref={el => (videoRefs.current[i] = el)}
                 poster={s.poster}
-                autoPlay={active}
+                autoPlay={active && inView}
                 muted
                 loop
                 playsInline
-                preload="metadata"
+                preload={preload}
+                onLoadedMetadata={e => {
+                  if (active && inView) (e.currentTarget as HTMLVideoElement).play().catch(() => {});
+                }}
                 className="w-full h-full object-cover image-polish"
               >
+                <source src={s.webmSm} type="video/webm" media="(max-width: 768px)" />
+                <source src={s.mp4Sm} type="video/mp4" media="(max-width: 768px)" />
                 <source src={s.webm} type="video/webm" />
                 <source src={s.mp4} type="video/mp4" />
               </video>
             ) : mount && s.kind === "image" ? (
               <img
-                src={s.src}
+                src={imgFallback(s.base)}
+                srcSet={imgSrcSet(s.base)}
+                sizes="100vw"
                 alt=""
                 width={1920}
                 height={1080}
@@ -162,7 +195,6 @@ export default function HeroMedia() {
         );
       })}
 
-      {/* Layered overlays for legibility — kept identical across slides so text never shifts */}
       <div className="absolute inset-0 bg-gradient-to-t from-background via-background/75 to-background/30 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-to-r from-background/85 via-background/30 to-transparent pointer-events-none" />
       <div className="absolute inset-0 bg-black/15 pointer-events-none" />

@@ -1,83 +1,54 @@
+# Hero performance & polish — top 1% production grade
 
-## Goal
+Focused on the three asks (responsive sources, lazy playback, preload + headers) plus the small polish items needed to truly hit production grade.
 
-Take the current live atdbtrade.com site (from `assets_2.zip`), integrate the real equipment photos (from `REAL_PHOTOS_OF_EQUIPEMENTS_ATDB_1.zip`) according to the mapping CSV/PDF, and produce a final deploy-ready zip file — preserving all existing design, content, and functionality.
+## 1. Responsive image & video source sets
 
-## What will be done
+**Stills (`HeroMedia.tsx`)**
+- Pre-generate three widths per WebP still (`-768.webp`, `-1280.webp`, `-1920.webp`) using `sharp` in a one-shot script written to `/tmp` and outputting to `public/assets/hero/`.
+- Render each `<img>` with `srcSet` + `sizes="100vw"` so a phone pulls ~80 KB instead of ~400 KB.
+- Keep the existing single-file paths as the `src` fallback.
 
-### 1. Extract and analyze the current site files
+**Videos**
+- Add a 720p variant of each clip (`-720.webm` / `-720.mp4`, ~350 kbps VP9 / ~500 kbps H.264) alongside the current 1080p.
+- In `<video>`, order `<source>` tags by `media`:
+  - `media="(max-width: 768px)"` → 720p webm, then 720p mp4
+  - default → existing 1080p webm, then mp4
+- Re-encode posters as ~1280-wide JPEGs (current ones are already small but verify <60 KB).
 
-Unzip `assets_2.zip` (the live hosting bundle) to understand the full file structure — HTML, JS, CSS, assets, and routing. This is the baseline that must not be broken.
+## 2. Viewport-gated (lazy) video playback
 
-### 2. Extract and optimize real equipment photos
+- Add an `IntersectionObserver` in `HeroMedia` watching the hero root.
+- Track `inView` state. Videos only `play()` when `inView && active && !reduced && !lite`.
+- When the hero scrolls out, `pause()` all videos and clear the rotation timer; resume on re-entry. Saves CPU + battery on long pages.
+- Combine with existing "active ± 1" mount window so off-screen slides also stay unmounted.
 
-Unzip `REAL_PHOTOS_OF_EQUIPEMENTS_ATDB_1.zip` and `atdb_gallery.zip`. Using the `ATDB_real_photo_mapping.csv`, map each photo to its target equipment ID:
+## 3. Preload, autoplay, caching headers
 
-| Equipment ID | Equipment Name | Photos |
-|---|---|---|
-| ATDB-CR-002 | Liebherr LTM 1070-4.1 Crane | 2 photos |
-| ATDB-EX-002 | CAT 320BU Excavator | 2 photos |
-| ATDB-RR-004 | Dynapac CC20 Double Drum | 2 photos |
-| ATDB-RR-005 | Bomag BW Tandem Vibratory | 2 photos |
-| ATDB-RR-008 | Sakai HV60 Mini Tandem | 3 photos |
-| ATDB-LD-001 | CASE 770EX Magnum Backhoe | 1 photo |
-| ATDB-SP-004 | Honda 80k-100 Sand Compactor | 3 photos |
-| ATDB-SP-005 | Honda ER2500CX Generator | 1 photo |
+**Component-level**
+- Keep `preload="metadata"` for the active video; switch the neighbor (active+1) to `preload="none"` until it becomes active. This eliminates one wasted metadata fetch per cycle.
+- Add `muted` + `playsInline` (already present) and a one-time silent `.play().catch()` retry on the `loadedmetadata` event for stricter mobile autoplay policies.
+- Add a `<link rel="preload" as="image" imagesrcset=… imagesizes="100vw" href=…>` in `index.html` for the LCP poster only — eager hint, no JS dependency.
 
-Photos will be placed in `equipment/` folder organized by equipment ID, optimized/compressed for web.
+**`public/_headers`**
+- Keep `Cache-Control: public, max-age=31536000, immutable` on `/videos/*` and `/assets/*`.
+- Already sends `Accept-Ranges: bytes`; explicitly document this so range requests work for `<video>` seek/scan.
+- Add `Vary: Accept-Encoding` on `/assets/*` and a short `stale-while-revalidate` on the HTML shell (`/*` block) so updates roll out without breaking the cache benefit.
 
-### 3. Update equipment data with real photo paths
+## 4. Verification
 
-Locate the JS data arrays that define equipment items. For each equipment ID that has real photos, add the real photo paths alongside (or replacing) the existing AI-generated images. The real photos will appear on:
-- Individual equipment detail pages
-- Equipment category listing pages
-- The homepage "Featured Equipment" cards
+- Re-run the existing `playwright` visual smoke + a fresh DevTools network audit (manually) to confirm:
+  - Mobile pulls only the 720p webm and a single ~80 KB poster
+  - Desktop still gets 1080p with smooth crossfade
+  - Scrolling past the hero halts video network activity
+- Check `prefers-reduced-motion` and lite-path branches still short-circuit before any video network request.
 
-### 4. Populate the "Live Fleet Photos" section
+## Files touched
 
-The homepage already has a "Live fleet photos / Current-condition photo stream" section (currently showing only one Sakai photo from Supabase). Wire all real photos into this section with:
-- Category filter tabs (All, Road Rollers, Mobile Cranes, Excavators, Loaders, Support Equipment)
-- Responsive grid layout with balanced cropping
-- Equipment ID and name labels on each photo
+- `src/components/home/HeroMedia.tsx` — IO gating, srcSet/sizes, multi-source `<video>`, smarter preload state machine.
+- `index.html` — single LCP `<link rel="preload">` for the hero poster.
+- `public/_headers` — document range support, add `Vary` and SWR for HTML.
+- `public/assets/hero/*` (new) — responsive WebP variants generated via a `/tmp/gen-hero.mjs` sharp script.
+- `public/videos/*-720.{webm,mp4}` (new) — 720p variants via `ffmpeg`.
 
-### 5. Add WhatsApp quote CTAs per equipment card
-
-Each featured equipment card will have a "Rent Now" button that opens WhatsApp with a prefilled message like:
-```
-Hello ATDB Trade International,
-I'd like to rent the [Equipment Name] ([ID] · [Capacity]).
-Project location: 
-Duration (days): 
-Please share availability and a quotation. — ATDB website
-```
-This pattern already exists on the live site — it will be verified and ensured for every equipment card.
-
-### 6. Match the footer exactly from live site
-
-Extract and verify the footer matches the live atdbtrade.com 1:1:
-- ATDB logo + tagline
-- EXPLORE links (Equipment, Projects, About, Contact)
-- OFFICES section (Corporate: Dhaka, Branch: Tangail)
-- CONTACT section (phone, email)
-- WhatsApp and Facebook social icons
-- Bottom bar: "A Sazid Hossain Architecture" badge + copyright
-
-### 7. Verify and package
-
-- Compare the modified site against the live atdbtrade.com to confirm nothing is broken
-- Fix any errors found
-- Package everything into a final deploy-ready zip file at `/mnt/documents/`
-
-## What will NOT change
-
-- Site design system, colors, fonts, layout
-- All existing text content and translations (EN/BN)
-- Navigation, routing, page structure
-- Project highlights section
-- "Why ATDB" section
-- Any existing AI-generated equipment images (kept alongside real photos)
-- WhatsApp floating button and Get Quote button behavior
-
-## Output
-
-A single deploy-ready zip file delivered to you, ready to upload to your hosting.
+No design, copy, routing, or business-logic changes. Lite-path + reduced-motion behavior preserved.
