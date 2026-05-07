@@ -8,6 +8,9 @@ import FeaturedEquipment from "@/components/home/FeaturedEquipment";
 import LiveFleetPhotos from "@/components/home/LiveFleetPhotos";
 import ProjectHighlights from "@/components/home/ProjectHighlights";
 import StandardsStrip from "@/components/home/StandardsStrip";
+import ScrollProgress from "@/components/ScrollProgress";
+import PagePreloader from "@/components/PagePreloader";
+import RevealOnScroll from "@/components/RevealOnScroll";
 
 /**
  * SAFE-LAZY POLICY
@@ -36,22 +39,24 @@ const Reserve = ({ minHeight }: { minHeight: number }) => (
 export default function Index() {
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <PagePreloader />
+      <ScrollProgress />
       <Navbar />
       <HeroSection />
       <Suspense fallback={<Reserve minHeight={120} />}>
-        <BrandMarquee />
+        <RevealOnScroll><BrandMarquee /></RevealOnScroll>
       </Suspense>
-      <HeroGallery />
-      <EquipmentCategories />
-      <FeaturedEquipment />
-      <LiveFleetPhotos />
+      <RevealOnScroll><HeroGallery /></RevealOnScroll>
+      <RevealOnScroll><EquipmentCategories /></RevealOnScroll>
+      <RevealOnScroll><FeaturedEquipment /></RevealOnScroll>
+      <RevealOnScroll><LiveFleetPhotos /></RevealOnScroll>
       <Suspense fallback={<Reserve minHeight={400} />}>
-        <WhyATDB />
+        <RevealOnScroll><WhyATDB /></RevealOnScroll>
       </Suspense>
-      <ProjectHighlights />
-      <StandardsStrip />
+      <RevealOnScroll><ProjectHighlights /></RevealOnScroll>
+      <RevealOnScroll><StandardsStrip /></RevealOnScroll>
       <Suspense fallback={<Reserve minHeight={300} />}>
-        <CTASection />
+        <RevealOnScroll><CTASection /></RevealOnScroll>
       </Suspense>
       <Footer />
       <Suspense fallback={null}>
