@@ -58,6 +58,8 @@ function VideoCard({ video }: { video: typeof fleetVideos[0] }) {
         <img
           src={video.poster}
           alt={label}
+          width="800"
+          height="450"
           loading="lazy"
           decoding="async"
           className="w-full h-full object-cover"
