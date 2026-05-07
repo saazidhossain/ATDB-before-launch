@@ -44,10 +44,13 @@ export default function FeaturedEquipment() {
                   <span className="text-[10px] text-white/30">·</span>
                   <span className="text-[10px] text-orange-400/70 truncate">{eq.categoryLabel}</span>
                 </div>
-                <Link to={`/equipment/${eq.category}/${eq.id}`} className="text-lg font-semibold text-white hover:text-orange-400 transition-colors leading-snug break-words">
+                <Link to={`/equipment/${eq.category}/${eq.id}`} className="text-lg font-semibold text-white hover:text-orange-400 transition-colors leading-snug break-words [overflow-wrap:anywhere]">
                   {eq.name}
                 </Link>
-                <p className="text-sm text-white/40 mt-1 break-words">{eq.capacity} · {eq.origin} · {eq.year}</p>
+                {eq.banglaLabel && (
+                  <p lang="bn" className="text-xs text-white/50 mt-0.5 break-words [overflow-wrap:anywhere]">{eq.banglaLabel}</p>
+                )}
+                <p className="text-sm text-white/40 mt-1 break-words [overflow-wrap:anywhere]">{eq.capacity} · {eq.origin} · {eq.year}</p>
 
                 <div className="mt-auto pt-4 flex items-stretch gap-3">
                   <a

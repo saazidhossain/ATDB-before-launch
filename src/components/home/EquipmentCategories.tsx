@@ -28,10 +28,10 @@ export default function EquipmentCategories() {
               <img src={cat.image} alt={cat.label} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
               <div className="absolute inset-0 bg-gradient-to-t from-orange-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative h-full w-full flex flex-col justify-end p-6">
-                <p className="text-orange-300/80 text-xs font-medium mb-1 break-words">{lang === "bn" ? cat.label : cat.bangla}</p>
-                <h3 className="text-xl font-bold text-white mb-1 font-display break-words leading-snug">{lang === "bn" ? cat.bangla : cat.label}</h3>
-                <p className="text-white/50 text-sm break-words">
+              <div className="relative h-full w-full flex flex-col justify-end p-6 min-w-0">
+                <p lang={lang === "bn" ? "en" : "bn"} className="text-orange-300/80 text-xs font-medium mb-1 break-words [overflow-wrap:anywhere]">{lang === "bn" ? cat.label : cat.bangla}</p>
+                <h3 lang={lang} className="text-xl font-bold text-white mb-1 font-display break-words [overflow-wrap:anywhere] leading-snug">{lang === "bn" ? cat.bangla : cat.label}</h3>
+                <p className="text-white/50 text-sm break-words [overflow-wrap:anywhere]">
                   {cat.units} {cat.range && `· ${cat.range}`} · {cat.brands}
                 </p>
                 <div className="mt-4 flex items-center gap-2 text-orange-400 text-xs font-semibold tracking-wider group-hover:gap-3 transition-all">
