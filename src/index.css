@@ -184,3 +184,31 @@ html {
   animation: hero-kenburns 22s ease-out forwards;
   will-change: transform;
 }
+
+/* Logo entrance — fade + tiny scale-up on first paint */
+@keyframes logo-enter {
+  0%   { opacity: 0; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.logo-enter {
+  animation: logo-enter 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+/* CSS-only light sweep on hover for the logo mark */
+.logo-sweep { position: relative; overflow: hidden; border-radius: 0.75rem; }
+.logo-sweep::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.35) 50%, transparent 70%);
+  transform: translateX(-120%);
+  pointer-events: none;
+  transition: transform 700ms ease;
+}
+.group:hover .logo-sweep::after,
+.group:focus-visible .logo-sweep::after { transform: translateX(120%); }
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-enter, .animate-hero-kenburns { animation: none !important; }
+  .logo-sweep::after { display: none; }
+}
