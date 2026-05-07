@@ -174,3 +174,13 @@ html {
 .animate-pulse-glow {
   animation: pulse-glow 3s ease-in-out infinite;
 }
+
+/* Hero Ken-Burns — slow, subtle zoom for stills behind the headline */
+@keyframes hero-kenburns {
+  0%   { transform: scale(1.05) translate3d(0,0,0); }
+  100% { transform: scale(1.18) translate3d(-1.5%, -1%, 0); }
+}
+.animate-hero-kenburns {
+  animation: hero-kenburns 12s ease-out forwards;
+  will-change: transform;
+}
