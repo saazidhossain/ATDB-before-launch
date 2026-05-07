@@ -204,8 +204,11 @@ export default function LiveFleetPhotos() {
                 <img
                   src={photo.src}
                   alt={`${photo.name} ${photo.source === "real" ? "real current condition" : "equipment visual"}`}
+                  width="600"
+                  height="600"
                   className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${photo.source === "real" ? "image-polish" : "image-polish-strong"}`}
                   loading="lazy"
+                  decoding="async"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-100" />
                 <div className="absolute bottom-0 left-0 right-0 p-4">
