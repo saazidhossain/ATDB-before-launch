@@ -61,32 +61,48 @@ export default function HeroGallery() {
         </div>
 
         <div className="relative aspect-[16/9] sm:aspect-[21/9] rounded-3xl overflow-hidden glass-card group">
-          {slides.map((s, i) => (
-            <div
-              key={i}
-              className={`absolute inset-0 transition-opacity duration-1000 ${i === idx ? "opacity-100" : "opacity-0 pointer-events-none"}`}
-            >
-              {s.kind === "video" && i === idx ? (
-                <video
-                  src={s.src}
-                  poster={s.poster}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <img
-                  src={s.kind === "video" ? s.poster : s.src}
-                  alt={s.title}
-                  loading={i === 0 ? "eager" : "lazy"}
-                  className="w-full h-full object-cover"
-                />
-              )}
-            </div>
-          ))}
+          {slides.map((s, i) => {
+            // Render only the current slide ± 1 neighbour so we don't fire 14 image
+            // requests on first paint. Keeps layout stable (absolute-positioned)
+            // and prevents reflow when language or breakpoint changes.
+            const dist = Math.min(
+              Math.abs(i - idx),
+              total - Math.abs(i - idx)
+            );
+            const shouldMount = dist <= 1;
+            return (
+              <div
+                key={i}
+                className={`absolute inset-0 transition-opacity duration-1000 ${i === idx ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+              >
+                {shouldMount && (
+                  s.kind === "video" && i === idx ? (
+                    <video
+                      src={s.src}
+                      poster={s.poster}
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      preload="metadata"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <img
+                      src={s.kind === "video" ? s.poster : s.src}
+                      alt={s.title}
+                      width="1920"
+                      height="820"
+                      loading={i === 0 ? "eager" : "lazy"}
+                      decoding={i === 0 ? "sync" : "async"}
+                      fetchPriority={i === 0 ? "high" : "low"}
+                      className="w-full h-full object-cover"
+                    />
+                  )
+                )}
+              </div>
+            );
+          })}
 
           <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/30 pointer-events-none" />
 
