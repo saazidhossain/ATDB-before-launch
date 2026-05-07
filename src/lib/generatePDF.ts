@@ -59,7 +59,7 @@ const STR = {
   contactWa:    "WhatsApp:  +880 1712-106242",
   contactEmail: "Email:     saifulaapi@gmail.com",
   contactWeb:   "Website:   www.atdbtrade.com",
-  footerLeft:   "© ATDB Trade International  ·  Heavy Equipment Rental & Civil Contractor",
+  footerLeft:   "© ATDB Trade International",
   pageOf: (a: number, b: number) => `Page ${a} of ${b}`,
   generated: "Generated",
 } as const;
