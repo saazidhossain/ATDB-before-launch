@@ -43,9 +43,9 @@ export default function StandardsStrip() {
           </h2>
         </div>
 
-        <ul className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <ul className="list-none grid grid-cols-1 sm:grid-cols-3 gap-4 p-0 m-0">
           {items.map((it) => (
-            <li key={it.code as string}>
+            <li key={it.code as string} className="list-none">
               <Link
                 to="/about"
                 aria-label={`${it.code} — ${it.label}`}
