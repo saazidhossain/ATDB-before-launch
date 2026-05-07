@@ -230,3 +230,21 @@ a.bg-orange-500:active, button.bg-orange-500:active {
   transform: translateY(1px) scale(0.985);
   box-shadow: 0 6px 16px -8px hsl(25 95% 55% / 0.5);
 }
+
+/* Mobile touch target enforcement — ensure ≥44px per WCAG 2.5.5 / Apple HIG */
+@media (hover: none) and (pointer: coarse), (max-width: 768px) {
+  a[href], button:not(:disabled), [role="button"], input[type="button"], input[type="submit"], label[for] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  /* Inline links inside paragraphs should not get min sizing */
+  p a[href], li a[href], span a[href] {
+    min-height: 0;
+    min-width: 0;
+    display: inline;
+  }
+  /* Card-style links: ensure tap area */
+  a.card, a[class*="card"], [role="button"][class*="card"] {
+    min-height: 44px;
+  }
+}
