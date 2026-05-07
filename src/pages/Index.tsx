@@ -49,6 +49,7 @@ export default function Index() {
         <WhyATDB />
       </Suspense>
       <ProjectHighlights />
+      <StandardsStrip />
       <Suspense fallback={<Reserve minHeight={300} />}>
         <CTASection />
       </Suspense>
