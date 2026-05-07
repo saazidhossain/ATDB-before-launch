@@ -209,7 +209,7 @@ export default function EquipmentDetail() {
                     {t("Technical Specifications", "টেকনিক্যাল স্পেসিফিকেশন")}
                   </h2>
                 </div>
-                <table className="w-full text-sm">
+                <table className="w-full text-sm table-fixed">
                   <tbody className="divide-y divide-white/5">
                     {[
                       { k: t("Model Number", "মডেল নম্বর"), v: equipment.model },
@@ -221,9 +221,9 @@ export default function EquipmentDetail() {
                       { k: t("Asset ID", "অ্যাসেট আইডি"), v: equipment.id },
                       { k: t("Quantity Available", "উপলব্ধ পরিমাণ"), v: `${equipment.quantity} ${t("Unit(s)", "ইউনিট")}` },
                     ].map(row => (
-                      <tr key={row.k}>
-                        <th scope="row" className="text-left px-5 py-2.5 text-white/50 font-normal w-1/2">{row.k}</th>
-                        <td className="px-5 py-2.5 text-white font-semibold">{row.v}</td>
+                      <tr key={row.k} className="align-top">
+                        <th scope="row" className="text-left px-4 sm:px-5 py-2.5 text-white/50 font-normal w-[46%] break-words">{row.k}</th>
+                        <td className="px-4 sm:px-5 py-2.5 text-white font-semibold break-words">{row.v}</td>
                       </tr>
                     ))}
                   </tbody>
