@@ -1,0 +1,176 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 20% 10%;
+    --foreground: 210 40% 98%;
+    --card: 220 18% 13%;
+    --card-foreground: 210 40% 98%;
+    --popover: 220 18% 13%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 25 95% 53%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 200 15% 20%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 215 18% 18%;
+    --muted-foreground: 215 16% 57%;
+    --accent: 25 95% 53%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 215 20% 20%;
+    --input: 215 20% 20%;
+    --ring: 25 95% 53%;
+    --radius: 0.75rem;
+    --sidebar-background: 220 18% 8%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 25 95% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 215 18% 18%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 215 20% 20%;
+    --sidebar-ring: 25 95% 53%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, .font-display {
+    font-family: 'Space Grotesk', 'Inter', -apple-system, sans-serif;
+    letter-spacing: -0.02em;
+  }
+  /* Bengali typography — switches whole tree when html.lang-bn */
+  html.lang-bn body,
+  html.lang-bn h1,
+  html.lang-bn h2,
+  html.lang-bn h3,
+  html.lang-bn .font-display {
+    font-family: 'Hind Siliguri', 'Inter', -apple-system, sans-serif;
+    letter-spacing: 0;
+  }
+  html.lang-bn body { line-height: 1.7; }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10;
+  }
+  .glass-strong {
+    @apply bg-white/10 backdrop-blur-2xl border border-white/15;
+  }
+  .glass-card {
+    @apply bg-white/[0.07] backdrop-blur-xl border border-white/[0.12] shadow-2xl;
+  }
+  .glass-hover {
+    @apply transition-all duration-500 hover:bg-white/[0.12] hover:border-white/20 hover:shadow-[0_20px_60px_-15px_rgba(245,130,32,0.15)] hover:-translate-y-1;
+  }
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-orange-400 via-orange-500 to-amber-500;
+  }
+  .glow-orange {
+    box-shadow: 0 0 40px -10px rgba(245, 130, 32, 0.4);
+  }
+  .section-padding {
+    @apply py-20 md:py-28 lg:py-32;
+  }
+  .image-polish {
+    filter: contrast(1.04) saturate(1.06) brightness(1.01);
+  }
+  .image-polish-strong {
+    filter: contrast(1.08) saturate(1.08) brightness(1.02);
+  }
+  /* Rich typography helpers */
+  .eyebrow {
+    @apply text-xs font-mono tracking-[0.3em] text-orange-400 uppercase;
+  }
+  .display-hero {
+    @apply text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.05];
+  }
+  /* Animated underline on hover */
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 350ms ease;
+  }
+  .link-underline:hover { background-size: 100% 1px; }
+  /* Subtle text-shimmer for hero spans */
+  .text-shimmer {
+    background: linear-gradient(90deg, hsl(25 95% 60%), hsl(35 95% 70%), hsl(25 95% 60%));
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 6s linear infinite;
+  }
+  @keyframes shimmer { to { background-position: 200% 0; } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  /* Glow card hover */
+  .card-tilt {
+    transition: transform 500ms cubic-bezier(.2,.7,.2,1), box-shadow 500ms ease;
+  }
+  .card-tilt:hover {
+    transform: translateY(-6px) rotateX(2deg);
+    box-shadow: 0 30px 60px -25px rgba(245,130,32,0.35);
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(220 20% 10%);
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(215 20% 25%);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(25 95% 53%);
+}
+
+/* Brand marquee animation */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+/* Floating particle animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.3; }
+  50% { transform: translateY(-20px) rotate(180deg); opacity: 0.6; }
+}
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Subtle pulse glow */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px -5px rgba(245, 130, 32, 0.3); }
+  50% { box-shadow: 0 0 40px -5px rgba(245, 130, 32, 0.5); }
+}
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
