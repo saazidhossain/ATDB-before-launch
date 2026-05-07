@@ -3,6 +3,9 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppFAB from "@/components/WhatsAppFAB";
 import { useLang } from "@/hooks/useLang";
+import certIso from "@/assets/cert-iso-9001.png";
+import certCis from "@/assets/cert-cis.png";
+import cert1stClass from "@/assets/cert-1st-class.png";
 
 export default function About() {
   const { t } = useLang();
@@ -70,36 +73,43 @@ export default function About() {
                 code: "ISO 9001",
                 title: t("Quality Management", "কোয়ালিটি ম্যানেজমেন্ট"),
                 ref: t("Aligned process & maintenance standards", "প্রসেস ও মেইনটেন্যান্স মান অনুসরণ"),
-                ring: "from-blue-500/30 to-blue-500/0",
-                badge: "ISO",
+                ring: "from-blue-500/25 to-blue-500/0",
+                img: certIso,
+                alt: t("ISO 9001 Quality Management certification seal", "ISO 9001 কোয়ালিটি ম্যানেজমেন্ট সিল"),
               },
               {
                 code: "CIS",
                 title: t("City Inspection Services", "সিটি ইন্সপেকশন সার্ভিসেস"),
                 ref: "CIS/077/2018",
-                ring: "from-emerald-500/30 to-emerald-500/0",
-                badge: "CIS",
+                ring: "from-emerald-500/25 to-emerald-500/0",
+                img: certCis,
+                alt: t("City Inspection Services Bangladesh seal", "সিটি ইন্সপেকশন সার্ভিসেস বাংলাদেশ সিল"),
               },
               {
                 code: t("1st Class", "১ম শ্রেণি"),
                 title: t("Contractor & Supplier", "ঠিকাদার ও সরবরাহকারী"),
                 ref: t("Govt. of Bangladesh classification", "বাংলাদেশ সরকার শ্রেণিভুক্ত"),
                 ring: "from-orange-500/30 to-orange-500/0",
-                badge: "1st",
+                img: cert1stClass,
+                alt: t("1st Class Contractor & Supplier seal — Govt. of Bangladesh", "১ম শ্রেণির ঠিকাদার সিল — বাংলাদেশ সরকার"),
               },
             ].map(c => (
-              <div key={c.title as string} className="glass-card rounded-2xl p-6 glass-hover relative overflow-hidden">
-                <div aria-hidden className={`absolute -top-12 -right-12 w-40 h-40 rounded-full bg-gradient-to-br ${c.ring} blur-2xl`} />
-                <div className="relative flex items-start gap-4">
-                  {/* Visual seal placeholder */}
-                  <div className="flex-shrink-0 w-16 h-16 rounded-full border-2 border-orange-400/40 bg-white/5 flex items-center justify-center text-orange-300 font-display font-bold text-sm tracking-wide">
-                    {c.badge}
+              <div key={c.title as string} className="glass-card rounded-2xl p-6 glass-hover relative overflow-hidden text-center">
+                <div aria-hidden className={`absolute -top-16 -right-16 w-48 h-48 rounded-full bg-gradient-to-br ${c.ring} blur-3xl`} />
+                <div className="relative flex flex-col items-center">
+                  <div className="w-28 h-28 rounded-full bg-white/[0.04] ring-1 ring-white/10 backdrop-blur-sm flex items-center justify-center p-2 shadow-lg shadow-black/30">
+                    <img
+                      src={c.img}
+                      alt={c.alt as string}
+                      width={224}
+                      height={224}
+                      loading="lazy"
+                      className="w-full h-full object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.45)]"
+                    />
                   </div>
-                  <div className="min-w-0">
-                    <p className="text-[11px] tracking-[0.22em] text-white/50 mb-1">{c.code}</p>
-                    <p className="font-semibold font-display">{c.title}</p>
-                    <p className="text-sm text-white/50 mt-1">{c.ref}</p>
-                  </div>
+                  <p className="text-[11px] tracking-[0.22em] text-white/50 mt-5">{c.code}</p>
+                  <p className="font-semibold font-display mt-1">{c.title}</p>
+                  <p className="text-sm text-white/50 mt-1">{c.ref}</p>
                 </div>
               </div>
             ))}
