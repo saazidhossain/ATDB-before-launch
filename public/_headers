@@ -1,7 +1,14 @@
-# Long-lived caching for static media — filenames are content-hashed or stable
+# Long-lived caching for static media — filenames are content-hashed or stable.
+# Accept-Ranges enables HTTP range requests so <video> can seek/scrub without
+# re-downloading the whole file.
 /videos/*
   Cache-Control: public, max-age=31536000, immutable
   Accept-Ranges: bytes
 
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
+  Vary: Accept-Encoding
+
+# HTML shell — short cache + revalidate so deploys roll out quickly.
+/*
+  Cache-Control: public, max-age=0, must-revalidate
