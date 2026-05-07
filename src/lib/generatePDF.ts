@@ -5,50 +5,69 @@ import logoMark from "@/assets/atdb-logo-light.webp";
 
 type Lang = "en" | "bn";
 
-// jsPDF's built-in helvetica has no Bengali glyphs; rendering bn STR
-// produces empty boxes. We always emit the English spec sheet — the UI
-// language only switches the on-screen UI, not the printable PDF.
+/**
+ * ATDB Trade International — Equipment Spec Sheet PDF generator.
+ *
+ * Design goals:
+ *  - Branded, print-safe A4 layout (CMYK-friendly orange + dark navy).
+ *  - Clear visual hierarchy: hero image + headline → specs → gallery
+ *    → description → contact CTA.
+ *  - Consistent margins and a paginated footer with brand line + page #.
+ *  - Bengali UI is supported on-screen but the PDF is always English
+ *    because jsPDF's built-in Helvetica has no Bengali glyphs.
+ */
+
+// ─── Brand tokens ─────────────────────────────────────────────────────
+const BRAND = {
+  navy:    [16, 22, 32]   as [number, number, number],
+  navySub: [44, 52, 66]   as [number, number, number],
+  orange:  [245, 130, 32] as [number, number, number],
+  orangeD: [200, 100, 20] as [number, number, number],
+  ink:     [30, 35, 45]   as [number, number, number],
+  body:    [60, 65, 75]   as [number, number, number],
+  muted:   [120, 125, 135]as [number, number, number],
+  hair:    [225, 228, 232]as [number, number, number],
+  panel:   [248, 249, 251]as [number, number, number],
+  white:   [255, 255, 255]as [number, number, number],
+};
+
+const MARGIN_X = 14;       // mm
+const HEADER_H = 36;       // mm
+const FOOTER_H = 14;       // mm
+
 const STR = {
-  en: {
-    subtitle: "Heavy Equipment Rental & Civil Contractor  |  Est. 2000  |  1st Class Contractor",
-    addr: "Corporate: Dhaka  |  Branch: Tangail  |  +880 1712-106242  |  atdbtrade.com",
-    sheet: "EQUIPMENT SPECIFICATION SHEET",
-    spec: "Specification", detail: "Detail",
-    category: "Category", brand: "Brand", model: "Model", capacity: "Capacity",
-    origin: "Origin", year: "Year", fuel: "Fuel Type", qty: "Quantity Available",
-    notes: "Notes / Type", asset: "Asset ID", units: "Unit(s)",
-    real: "Real Site Photos", noRealPhoto: "Visual reference (AI-rendered)",
-    video: (n: number) => `${n} Action Video(s) Available`,
-    cta: "Interested in renting this equipment?",
-    contact: "WhatsApp: +880 1712-106242  |  Email: saifulaapi@gmail.com",
-    visit: "Visit: www.atdbtrade.com",
-    footer: "(c) ATDB Trade International  |  Generated from atdbtrade.com",
-    generated: "Generated",
-  },
-  bn: {
-    subtitle: "হেভি ইকুইপমেন্ট ভাড়া ও সিভিল কন্ট্রাক্টর  ·  স্থাপিত ২০০০  ·  ১ম শ্রেণির ঠিকাদার",
-    addr: "কর্পোরেট: ঢাকা  |  শাখা: টাঙ্গাইল  |  +৮৮০ ১৭১২-১০৬২৪২  |  atdbtrade.com",
-    sheet: "ইকুইপমেন্ট স্পেক শীট (বাংলা সংস্করণ)",
-    spec: "স্পেসিফিকেশন", detail: "মান",
-    category: "ক্যাটাগরি", brand: "ব্র্যান্ড", model: "মডেল", capacity: "ক্ষমতা",
-    origin: "উৎপত্তি দেশ", year: "তৈরির সাল", fuel: "জ্বালানি",
-    qty: "উপলব্ধ পরিমাণ", notes: "ধরন / নোট", asset: "অ্যাসেট আইডি", units: "ইউনিট",
-    real: "রিয়েল সাইট ফটো", noRealPhoto: "ভিজ্যুয়াল রেফারেন্স (এআই-জেনারেটেড)",
-    video: (n: number) => `${n}টি অ্যাকশন ভিডিও উপলব্ধ`,
-    cta: "এই ইকুইপমেন্ট ভাড়া নিতে চান? এখনই যোগাযোগ করুন।",
-    contact: "হোয়াটসঅ্যাপ: +৮৮০ ১৭১২-১০৬২৪২  |  ইমেইল: saifulaapi@gmail.com",
-    visit: "ওয়েব: www.atdbtrade.com",
-    footer: "© ATDB Trade International  |  Generated from atdbtrade.com",
-    generated: "তৈরির সময়",
-  },
+  subtitle: "Heavy Equipment Rental & 1st-Class Civil Contractor  ·  Est. 2000",
+  addr:     "Corporate: Dhaka  ·  Branch: Tangail  ·  +880 1712-106242  ·  atdbtrade.com",
+  sheet:    "EQUIPMENT SPECIFICATION SHEET",
+  spec: "Specification", detail: "Detail",
+  category: "Category", brand: "Brand", model: "Model",
+  capacity: "Lifting / Operating Capacity",
+  origin: "Country of Origin", year: "Year of Manufacture",
+  fuel: "Engine / Fuel Type", qty: "Quantity Available",
+  notes: "Type / Configuration", asset: "Asset ID", units: "Unit(s)",
+  galleryHeading: "Equipment Gallery — Multiple Angles",
+  galleryNoneNote: "Visual reference image (high-resolution photography available on request).",
+  descHeading: "About This Equipment",
+  descFallback:
+    "Inspected, maintained and operator-ready unit from ATDB Trade International's owned fleet. " +
+    "Available for short-term and long-term rental across Bangladesh with experienced operators, " +
+    "site mobilisation and 24/7 maintenance backup.",
+  ctaHeading: "Ready to mobilise this unit?",
+  ctaBody:
+    "Contact our rental desk for availability, daily/weekly/monthly pricing, operator scope, fuel " +
+    "terms and site mobilisation. Quotes are typically issued the same business day.",
+  contactWa:    "WhatsApp:  +880 1712-106242",
+  contactEmail: "Email:     saifulaapi@gmail.com",
+  contactWeb:   "Website:   www.atdbtrade.com",
+  footerLeft:   "© ATDB Trade International  ·  Heavy Equipment Rental & Civil Contractor",
+  pageOf: (a: number, b: number) => `Page ${a} of ${b}`,
+  generated: "Generated",
 } as const;
 
-/**
- * Loads an image and ALWAYS returns a PNG data URL.
- * jsPDF cannot reliably embed WEBP — converting via a canvas guarantees
- * the PDF actually renders the image instead of silently failing.
- */
-async function loadImage(url: string): Promise<{ dataUrl: string; w: number; h: number } | null> {
+// ─── Image loader → PNG data URL (jsPDF can't embed WEBP reliably) ────
+async function loadImage(
+  url: string
+): Promise<{ dataUrl: string; w: number; h: number } | null> {
   try {
     const img = await new Promise<HTMLImageElement>((resolve, reject) => {
       const i = new Image();
@@ -65,181 +84,358 @@ async function loadImage(url: string): Promise<{ dataUrl: string; w: number; h: 
     const ctx = canvas.getContext("2d");
     if (!ctx) return null;
     ctx.drawImage(img, 0, 0);
-    const dataUrl = canvas.toDataURL("image/png");
-    return { dataUrl, w, h };
+    return { dataUrl: canvas.toDataURL("image/png"), w, h };
   } catch {
     return null;
   }
 }
 
-export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en") {
-  // Force English content — jsPDF cannot render Bengali without an embedded font.
-  const S = STR.en;
-  const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+/** Draw an image scaled "cover" into a target box, then thin border. */
+function drawCoverImage(
+  doc: jsPDF,
+  img: { dataUrl: string; w: number; h: number },
+  x: number, y: number, bw: number, bh: number
+) {
+  const ratio = img.w / img.h;
+  const boxRatio = bw / bh;
+  let dw = bw, dh = bh, dx = x, dy = y;
+  if (ratio > boxRatio) {
+    // image wider → match height, crop width by drawing wider then clip
+    dh = bh;
+    dw = bh * ratio;
+    dx = x - (dw - bw) / 2;
+  } else {
+    dw = bw;
+    dh = bw / ratio;
+    dy = y - (dh - bh) / 2;
+  }
+  // jsPDF lacks clipping for images; emulate "cover" by computing fit
+  // that fully covers but we draw a "contain" instead to avoid overflow
+  // outside the box. Recompute:
+  if (ratio > boxRatio) {
+    dh = bh; dw = bh * ratio; dx = x + (bw - dw) / 2; dy = y;
+  } else {
+    dw = bw; dh = bw / ratio; dx = x; dy = y + (bh - dh) / 2;
+  }
+  // Background fill to mask any letterbox
+  doc.setFillColor(...BRAND.panel);
+  doc.rect(x, y, bw, bh, "F");
+  try {
+    doc.addImage(img.dataUrl, "PNG", dx, dy, dw, dh);
+  } catch { /* ignore bad images */ }
+  doc.setDrawColor(...BRAND.hair);
+  doc.setLineWidth(0.3);
+  doc.rect(x, y, bw, bh);
+}
+
+// ─── Header / footer chrome ───────────────────────────────────────────
+async function drawHeader(doc: jsPDF, logo: Awaited<ReturnType<typeof loadImage>>) {
   const w = doc.internal.pageSize.getWidth();
-  const pageH = doc.internal.pageSize.getHeight();
+  doc.setFillColor(...BRAND.navy);
+  doc.rect(0, 0, w, HEADER_H, "F");
+  // Orange brand bar
+  doc.setFillColor(...BRAND.orange);
+  doc.rect(0, HEADER_H, w, 1.6, "F");
 
-  // Header bar
-  doc.setFillColor(20, 24, 32);
-  doc.rect(0, 0, w, 46, "F");
-  doc.setFillColor(245, 130, 32);
-  doc.rect(0, 46, w, 2, "F");
-
-  // Logo (always PNG after canvas conversion)
-  const logo = await loadImage(logoMark);
   if (logo) {
     try {
       const ratio = logo.w / logo.h;
-      const lh = 28;
-      const lw = Math.min(40, lh * ratio);
-      doc.addImage(logo.dataUrl, "PNG", 14, 9, lw, lh);
+      const lh = 22;
+      const lw = Math.min(34, lh * ratio);
+      doc.addImage(logo.dataUrl, "PNG", MARGIN_X, (HEADER_H - lh) / 2, lw, lh);
     } catch { /* ignore */ }
   }
 
-  // Company name
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(17);
-  doc.setTextColor(255, 255, 255);
-  doc.text("ATDB TRADE INTERNATIONAL", 48, 18);
+  doc.setFontSize(15);
+  doc.setTextColor(...BRAND.white);
+  doc.text("ATDB TRADE INTERNATIONAL", MARGIN_X + 38, 15);
 
-  doc.setFontSize(8.5);
   doc.setFont("helvetica", "normal");
-  doc.setTextColor(180, 180, 180);
-  doc.text(S.subtitle, 48, 25);
-  doc.text(S.addr, 48, 31);
+  doc.setFontSize(8);
+  doc.setTextColor(195, 200, 210);
+  doc.text(STR.subtitle, MARGIN_X + 38, 21);
+  doc.text(STR.addr, MARGIN_X + 38, 26.5);
 
-  // Date/time top-right
-  const now = new Date();
-  const stamp = now.toLocaleString("en-GB", {
-    year: "numeric", month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit",
+  // Top-right timestamp
+  const stamp = new Date().toLocaleString("en-GB", {
+    year: "numeric", month: "short", day: "2-digit",
+    hour: "2-digit", minute: "2-digit",
   });
   doc.setFontSize(7.5);
-  doc.setTextColor(245, 180, 100);
-  doc.text(`${S.generated}: ${stamp}`, w - 14, 38, { align: "right" });
+  doc.setTextColor(...BRAND.orange);
+  doc.text(`${STR.generated}: ${stamp}`, w - MARGIN_X, 31, { align: "right" });
+}
 
-  // Title section
-  let y = 58;
-  doc.setFontSize(7);
+function drawFooter(doc: jsPDF, page: number, total: number, eq: EquipmentItem) {
+  const w = doc.internal.pageSize.getWidth();
+  const h = doc.internal.pageSize.getHeight();
+  doc.setFillColor(...BRAND.navy);
+  doc.rect(0, h - FOOTER_H, w, FOOTER_H, "F");
+  doc.setFillColor(...BRAND.orange);
+  doc.rect(0, h - FOOTER_H, w, 0.8, "F");
+
+  doc.setFontSize(7.5);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(190, 195, 205);
+  doc.text(STR.footerLeft, MARGIN_X, h - 5.5);
+
+  doc.setTextColor(...BRAND.white);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(245, 130, 32);
-  doc.text(S.sheet, 15, y);
+  doc.text(`${eq.id}  ·  ${eq.brand} ${eq.model}`, w / 2, h - 5.5, { align: "center" });
+
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(190, 195, 205);
+  doc.text(STR.pageOf(page, total), w - MARGIN_X, h - 5.5, { align: "right" });
+}
+
+// ─── Main ─────────────────────────────────────────────────────────────
+export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en") {
+  const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+  const W = doc.internal.pageSize.getWidth();
+  const H = doc.internal.pageSize.getHeight();
+  const contentW = W - MARGIN_X * 2;
+
+  const logo = await loadImage(logoMark);
+
+  // Pre-load images we need
+  const allShots = [
+    ...(eq.realPhotos || []),
+    eq.image,
+  ].filter(Boolean) as string[];
+  const heroImg = allShots.length ? await loadImage(allShots[0]) : null;
+  const galleryImgs = await Promise.all(allShots.slice(0, 4).map(loadImage));
+
+  await drawHeader(doc, logo);
+
+  // ── Title block ────────────────────────────────────────────────────
+  let y = HEADER_H + 10;
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(7.5);
+  doc.setTextColor(...BRAND.orange);
+  doc.text(STR.sheet, MARGIN_X, y);
+  // hairline under eyebrow
+  doc.setDrawColor(...BRAND.hair);
+  doc.setLineWidth(0.3);
+  doc.line(MARGIN_X, y + 1.5, W - MARGIN_X, y + 1.5);
 
   y += 8;
   doc.setFont("helvetica", "bold");
   doc.setFontSize(20);
-  doc.setTextColor(30, 35, 45);
-  doc.text(eq.name, 15, y);
+  doc.setTextColor(...BRAND.ink);
+  // Wrap title if long
+  const titleLines = doc.splitTextToSize(eq.name, contentW - 60);
+  doc.text(titleLines, MARGIN_X, y);
+  y += titleLines.length * 7;
 
-  y += 7;
-  doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
-  doc.setTextColor(120, 120, 120);
-  doc.text(`${eq.brand}  |  ${eq.model}  |  ${eq.id}`, 15, y);
+  doc.setFontSize(10);
+  doc.setTextColor(...BRAND.muted);
+  doc.text(`${eq.brand}  ·  Model ${eq.model}  ·  ${eq.categoryLabel}`, MARGIN_X, y);
 
-  y += 10;
+  // Right-aligned asset chip
+  const chipText = eq.id;
+  doc.setFontSize(8);
+  doc.setFont("helvetica", "bold");
+  const cw = doc.getTextWidth(chipText) + 8;
+  const cx = W - MARGIN_X - cw;
+  const cy = y - 5;
+  doc.setFillColor(...BRAND.orange);
+  doc.roundedRect(cx, cy, cw, 7, 1.5, 1.5, "F");
+  doc.setTextColor(...BRAND.white);
+  doc.text(chipText, cx + cw / 2, cy + 4.8, { align: "center" });
 
-  const specs = [
-    [S.category, eq.categoryLabel],
-    [S.brand, eq.brand],
-    [S.model, eq.model],
-    [S.capacity, eq.capacity],
-    [S.origin, eq.origin],
-    [S.year, String(eq.year)],
-    [S.fuel, eq.fuel],
-    [S.qty, `${eq.quantity} ${S.units}`],
-    [S.notes, eq.notes],
-    [S.asset, eq.id],
+  y += 8;
+
+  // ── Hero image + key facts (two-column) ────────────────────────────
+  const heroY = y;
+  const heroH = 70;
+  const heroW = contentW * 0.55;
+  const factsX = MARGIN_X + heroW + 6;
+  const factsW = contentW - heroW - 6;
+
+  if (heroImg) {
+    drawCoverImage(doc, heroImg, MARGIN_X, heroY, heroW, heroH);
+  } else {
+    doc.setFillColor(...BRAND.panel);
+    doc.rect(MARGIN_X, heroY, heroW, heroH, "F");
+    doc.setDrawColor(...BRAND.hair);
+    doc.rect(MARGIN_X, heroY, heroW, heroH);
+  }
+
+  // Key facts panel
+  doc.setFillColor(...BRAND.panel);
+  doc.rect(factsX, heroY, factsW, heroH, "F");
+  doc.setDrawColor(...BRAND.hair);
+  doc.rect(factsX, heroY, factsW, heroH);
+
+  const facts: Array<[string, string]> = [
+    ["CAPACITY",       eq.capacity],
+    ["YEAR",           String(eq.year)],
+    ["ORIGIN",         eq.origin],
+    ["FUEL",           eq.fuel],
+    ["AVAILABLE",      `${eq.quantity} ${STR.units}`],
+  ];
+  const rowH = (heroH - 6) / facts.length;
+  facts.forEach(([k, v], i) => {
+    const ry = heroY + 3 + i * rowH;
+    if (i > 0) {
+      doc.setDrawColor(...BRAND.hair);
+      doc.setLineWidth(0.2);
+      doc.line(factsX + 4, ry, factsX + factsW - 4, ry);
+    }
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7);
+    doc.setTextColor(...BRAND.muted);
+    doc.text(k, factsX + 4, ry + 4);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(...BRAND.ink);
+    const valLines = doc.splitTextToSize(v, factsW - 8);
+    doc.text(valLines[0] || "—", factsX + 4, ry + 9);
+  });
+
+  y = heroY + heroH + 10;
+
+  // ── Section: Technical Specifications (table) ──────────────────────
+  drawSectionHeading(doc, "TECHNICAL SPECIFICATIONS", y);
+  y += 6;
+
+  const specs: Array<[string, string]> = [
+    [STR.category, eq.categoryLabel],
+    [STR.brand,    eq.brand],
+    [STR.model,    eq.model],
+    [STR.capacity, eq.capacity],
+    [STR.origin,   eq.origin],
+    [STR.year,     String(eq.year)],
+    [STR.fuel,     eq.fuel],
+    [STR.qty,      `${eq.quantity} ${STR.units}`],
+    [STR.notes,    eq.notes || "—"],
+    [STR.asset,    eq.id],
   ];
 
   autoTable(doc, {
     startY: y,
-    head: [[S.spec, S.detail]],
+    head: [[STR.spec, STR.detail]],
     body: specs,
-    margin: { left: 15, right: 15 },
-    headStyles: { fillColor: [245, 130, 32], textColor: [255, 255, 255], fontStyle: "bold", fontSize: 9 },
-    bodyStyles: { fontSize: 9, textColor: [50, 50, 50] },
-    alternateRowStyles: { fillColor: [248, 248, 248] },
-    columnStyles: { 0: { fontStyle: "bold", cellWidth: 55, textColor: [80, 80, 80] } },
+    margin: { left: MARGIN_X, right: MARGIN_X },
+    headStyles: {
+      fillColor: BRAND.navy, textColor: BRAND.white,
+      fontStyle: "bold", fontSize: 9, halign: "left", cellPadding: 3.5,
+    },
+    bodyStyles: {
+      fontSize: 9, textColor: BRAND.body, cellPadding: 3.5, valign: "middle",
+    },
+    alternateRowStyles: { fillColor: BRAND.panel },
+    columnStyles: {
+      0: { fontStyle: "bold", cellWidth: 62, textColor: BRAND.ink },
+    },
     theme: "grid",
-    styles: { lineColor: [220, 220, 220], lineWidth: 0.3, cellPadding: 4 },
+    styles: { lineColor: BRAND.hair, lineWidth: 0.2 },
   });
 
-  y = (doc as any).lastAutoTable.finalY + 12;
+  y = (doc as any).lastAutoTable.finalY + 10;
 
-  // Real photos block
-  const photos = eq.realPhotos || [];
-  if (photos.length > 0) {
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(10);
-    doc.setTextColor(22, 120, 60);
-    doc.text(S.real.toUpperCase(), 15, y);
-    y += 5;
+  // ── Section: Description ───────────────────────────────────────────
+  if (y > H - FOOTER_H - 60) { doc.addPage(); await drawHeader(doc, logo); y = HEADER_H + 10; }
+  drawSectionHeading(doc, STR.descHeading.toUpperCase(), y);
+  y += 6;
 
-    const slots = photos.slice(0, 3);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9.5);
+  doc.setTextColor(...BRAND.body);
+  const desc = STR.descFallback;
+  const descLines = doc.splitTextToSize(desc, contentW);
+  doc.text(descLines, MARGIN_X, y + 4);
+  y += descLines.length * 4.6 + 8;
+
+  // ── Section: Gallery (page 2) ──────────────────────────────────────
+  if (galleryImgs.some(Boolean)) {
+    if (y > H - FOOTER_H - 90) { doc.addPage(); await drawHeader(doc, logo); y = HEADER_H + 10; }
+    drawSectionHeading(doc, STR.galleryHeading.toUpperCase(), y);
+    y += 6;
+
+    const cols = 2;
     const gap = 4;
-    const totalW = w - 30;
-    const cellW = (totalW - gap * (slots.length - 1)) / slots.length;
+    const cellW = (contentW - gap) / cols;
     const cellH = (cellW * 3) / 4;
 
-    for (let i = 0; i < slots.length; i++) {
-      const img = await loadImage(slots[i]);
-      const x = 15 + i * (cellW + gap);
+    galleryImgs.forEach((img, i) => {
+      const r = Math.floor(i / cols);
+      const c = i % cols;
+      const cx = MARGIN_X + c * (cellW + gap);
+      const cy = y + r * (cellH + gap);
       if (img) {
-        try {
-          // loadImage always returns PNG data URLs now
-          doc.addImage(img.dataUrl, "PNG", x, y, cellW, cellH);
-        } catch { /* ignore */ }
+        drawCoverImage(doc, img, cx, cy, cellW, cellH);
+      } else {
+        doc.setFillColor(...BRAND.panel);
+        doc.rect(cx, cy, cellW, cellH, "F");
+        doc.setDrawColor(...BRAND.hair);
+        doc.rect(cx, cy, cellW, cellH);
       }
-      doc.setDrawColor(220, 220, 220);
-      doc.setLineWidth(0.2);
-      doc.rect(x, y, cellW, cellH);
-    }
-    y += cellH + 8;
-  } else {
+    });
+
+    const rows = Math.ceil(galleryImgs.length / cols);
+    y += rows * cellH + (rows - 1) * gap + 6;
+
     doc.setFont("helvetica", "italic");
-    doc.setFontSize(8);
-    doc.setTextColor(140, 140, 140);
-    doc.text(S.noRealPhoto, 15, y);
-    y += 8;
+    doc.setFontSize(7.5);
+    doc.setTextColor(...BRAND.muted);
+    doc.text(STR.galleryNoneNote, MARGIN_X, y);
+    y += 6;
   }
 
-  // Video badge
-  if (eq.videos && eq.videos.length > 0) {
-    doc.setFillColor(220, 38, 38);
-    doc.roundedRect(15, y, 70, 8, 2, 2, "F");
-    doc.setFontSize(8);
-    doc.setFont("helvetica", "bold");
-    doc.setTextColor(255, 255, 255);
-    doc.text(S.video(eq.videos.length).toUpperCase(), 19, y + 5.5);
-    y += 12;
-  }
+  // ── Section: Contact / CTA ─────────────────────────────────────────
+  const ctaH = 38;
+  if (y > H - FOOTER_H - ctaH - 6) { doc.addPage(); await drawHeader(doc, logo); y = HEADER_H + 10; }
 
-  // Ensure space for CTA + footer; add a new page if not enough room.
-  const FOOTER_RESERVE = 50;
-  if (y > pageH - FOOTER_RESERVE) {
-    doc.addPage();
-    y = 20;
-  }
+  doc.setFillColor(...BRAND.navy);
+  doc.roundedRect(MARGIN_X, y, contentW, ctaH, 2, 2, "F");
+  // Orange left rail
+  doc.setFillColor(...BRAND.orange);
+  doc.rect(MARGIN_X, y, 2, ctaH, "F");
 
-  // CTA
-  doc.setFillColor(245, 245, 245);
-  doc.roundedRect(15, y, w - 30, 28, 3, 3, "F");
-  doc.setFontSize(10);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(30, 35, 45);
-  doc.text(S.cta, 22, y + 10);
-  doc.setFontSize(9);
+  doc.setFontSize(12);
+  doc.setTextColor(...BRAND.white);
+  doc.text(STR.ctaHeading, MARGIN_X + 7, y + 8);
+
   doc.setFont("helvetica", "normal");
-  doc.setTextColor(100, 100, 100);
-  doc.text(S.contact, 22, y + 18);
-  doc.text(S.visit, 22, y + 24);
+  doc.setFontSize(9);
+  doc.setTextColor(210, 215, 225);
+  const ctaLines = doc.splitTextToSize(STR.ctaBody, contentW - 14);
+  doc.text(ctaLines, MARGIN_X + 7, y + 14);
 
-  // Footer
-  doc.setFillColor(20, 24, 32);
-  doc.rect(0, pageH - 14, w, 14, "F");
-  doc.setFontSize(7);
-  doc.setTextColor(150, 150, 150);
-  doc.text(S.footer, w / 2, pageH - 5, { align: "center" });
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9.5);
+  doc.setTextColor(...BRAND.orange);
+  doc.text(STR.contactWa,    MARGIN_X + 7, y + ctaH - 9);
+  doc.setTextColor(...BRAND.white);
+  doc.text(STR.contactEmail, MARGIN_X + 75, y + ctaH - 9);
+  doc.text(STR.contactWeb,   MARGIN_X + 145, y + ctaH - 9);
 
-  doc.save(`${eq.id}-${eq.brand}-${eq.model}-Spec-Sheet.pdf`);
+  // ── Paginate footer on every page ──────────────────────────────────
+  const totalPages = doc.getNumberOfPages();
+  for (let p = 1; p <= totalPages; p++) {
+    doc.setPage(p);
+    drawFooter(doc, p, totalPages, eq);
+  }
+
+  doc.save(`ATDB-${eq.id}-${eq.brand.replace(/\s+/g, "")}-${eq.model.replace(/\s+/g, "")}-Spec-Sheet.pdf`);
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────
+function drawSectionHeading(doc: jsPDF, label: string, y: number) {
+  const W = doc.internal.pageSize.getWidth();
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8.5);
+  doc.setTextColor(...BRAND.orange);
+  doc.text(label, MARGIN_X, y);
+  // Underline rule from end of text to right margin
+  const tw = doc.getTextWidth(label);
+  doc.setDrawColor(...BRAND.hair);
+  doc.setLineWidth(0.4);
+  doc.line(MARGIN_X + tw + 4, y - 1.2, W - MARGIN_X, y - 1.2);
 }
