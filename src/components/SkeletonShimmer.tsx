@@ -22,17 +22,17 @@ export default function SkeletonShimmer() {
       done = true;
       sessionStorage.setItem("atdb:skeleton-done", "1");
       setHidden(true);
-      window.setTimeout(() => setRemoved(true), 360);
+      // Match PagePreloader's 320ms fade so both overlays clear in lockstep.
+      window.setTimeout(() => setRemoved(true), 320);
     };
-    const safety = window.setTimeout(finish, 1400);
-    if (document.readyState === "complete") {
-      window.setTimeout(finish, 250);
-    } else {
-      window.addEventListener("load", finish, { once: true });
-    }
+    // Primary trigger: PagePreloader fires this the moment it begins fading.
+    // Shimmer fades simultaneously beneath it → no flicker, no overlap.
+    window.addEventListener("atdb:preloader-exit", finish, { once: true });
+    // Safety: if preloader never fires (e.g. it's removed), still exit.
+    const safety = window.setTimeout(finish, 1500);
     return () => {
       window.clearTimeout(safety);
-      window.removeEventListener("load", finish);
+      window.removeEventListener("atdb:preloader-exit", finish);
     };
   }, []);
 
