@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, MapPin, Calendar, Fuel, Wrench, Download, Play, Pause, Volume2, VolumeX, ShoppingCart, Maximize2 } from "lucide-react";
+import { ArrowLeft, MapPin, Calendar, Fuel, Wrench, Download, Play, Pause, Volume2, VolumeX, ShoppingCart, Maximize2, FileText } from "lucide-react";
 import { useState, useRef, useCallback, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -20,7 +20,7 @@ export default function EquipmentDetail() {
   const [videoMuted, setVideoMuted] = useState(true);
   const [videoVisible, setVideoVisible] = useState(false);
   const { t, lang } = useLang();
-  const { add } = useCart();
+  const { add, setOpen: setCartOpen } = useCart();
 
   useEffect(() => {
     const el = videoWrapRef.current;
@@ -184,7 +184,7 @@ export default function EquipmentDetail() {
               <p className="text-white/50 text-lg mb-8">{equipment.brand} · {equipment.model}</p>
 
               {/* Specs grid */}
-              <div className="grid grid-cols-2 gap-4 mb-8">
+              <div className="grid grid-cols-2 gap-4 mb-6">
                 {[
                   { icon: Wrench, label: t("Capacity", "ক্ষমতা"), value: equipment.capacity },
                   { icon: MapPin, label: t("Origin", "উৎপত্তি"), value: equipment.origin },
@@ -201,28 +201,42 @@ export default function EquipmentDetail() {
                 ))}
               </div>
 
-              <div className="glass-card rounded-xl p-4 mb-8">
-                <p className="text-xs text-white/40 mb-1">{t("Quantity Available", "উপলব্ধ পরিমাণ")}</p>
-                <p className="font-semibold">{equipment.quantity} {t("Unit(s)", "ইউনিট")}</p>
-                {equipment.notes && <p className="text-sm text-white/50 mt-1">{t("Note", "নোট")}: {equipment.notes}</p>}
+              {/* Structured technical specifications table */}
+              <div className="glass-card rounded-2xl overflow-hidden mb-6">
+                <div className="px-5 py-3 border-b border-white/10 flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-orange-400" />
+                  <h2 className="text-sm font-semibold tracking-wide uppercase text-white/80">
+                    {t("Technical Specifications", "টেকনিক্যাল স্পেসিফিকেশন")}
+                  </h2>
+                </div>
+                <table className="w-full text-sm">
+                  <tbody className="divide-y divide-white/5">
+                    {[
+                      { k: t("Model Number", "মডেল নম্বর"), v: equipment.model },
+                      { k: t("Lifting / Operating Capacity", "লিফটিং / অপারেটিং ক্ষমতা"), v: equipment.capacity },
+                      { k: t("Engine / Power", "ইঞ্জিন / পাওয়ার"), v: `${equipment.fuel}${equipment.notes ? ` · ${equipment.notes}` : ""}` },
+                      { k: t("Country of Origin", "উৎপত্তির দেশ"), v: equipment.origin },
+                      { k: t("Year of Manufacture", "নির্মাণ সাল"), v: String(equipment.year) },
+                      { k: t("Brand", "ব্র্যান্ড"), v: equipment.brand },
+                      { k: t("Asset ID", "অ্যাসেট আইডি"), v: equipment.id },
+                      { k: t("Quantity Available", "উপলব্ধ পরিমাণ"), v: `${equipment.quantity} ${t("Unit(s)", "ইউনিট")}` },
+                    ].map(row => (
+                      <tr key={row.k}>
+                        <th scope="row" className="text-left px-5 py-2.5 text-white/50 font-normal w-1/2">{row.k}</th>
+                        <td className="px-5 py-2.5 text-white font-semibold">{row.v}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
 
               {/* CTAs */}
               <div className="space-y-3">
-                <a
-                  href={getWhatsAppRentUrl(equipment.name, equipment.id, equipment.capacity)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-green-600 hover:bg-green-500 text-white font-semibold text-lg transition-all shadow-xl shadow-green-600/20 hover:shadow-green-500/30"
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
-                  {t("Rent This Equipment via WhatsApp", "হোয়াটসঅ্যাপে এই যন্ত্রপাতি ভাড়া নিন")}
-                </a>
-
+                {/* Prominent: Download Spec Sheet */}
                 <button
                   onClick={handlePDF}
                   disabled={pdfLoading}
-                  className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl glass hover:bg-white/10 text-white font-semibold text-lg transition-all border border-white/10 hover:border-orange-500/30 disabled:opacity-50"
+                  className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-orange-500 hover:bg-orange-400 text-white font-semibold text-lg transition-all shadow-xl shadow-orange-500/25 hover:shadow-orange-400/30 disabled:opacity-60"
                 >
                   <Download className={`w-5 h-5 ${pdfLoading ? "animate-bounce" : ""}`} />
                   {pdfLoading
@@ -231,13 +245,28 @@ export default function EquipmentDetail() {
                   }
                 </button>
 
+                {/* Add to cart → opens summary drawer before WhatsApp */}
                 <button
-                  onClick={() => equipment && add({ id: equipment.id, name: equipment.name, brand: equipment.brand, capacity: equipment.capacity, image: equipment.realPhotos?.[0] || equipment.image })}
-                  className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-orange-500/10 hover:bg-orange-500/20 text-orange-300 font-semibold text-lg transition-all border border-orange-500/30"
+                  onClick={() => {
+                    add({ id: equipment.id, name: equipment.name, brand: equipment.brand, capacity: equipment.capacity, image: equipment.realPhotos?.[0] || equipment.image });
+                    setCartOpen(true);
+                  }}
+                  className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-semibold text-lg transition-all border border-orange-500/40"
                 >
-                  <ShoppingCart className="w-5 h-5" />
-                  {t("Add to Rental Cart", "ভাড়ার কার্টে যোগ করুন")}
+                  <ShoppingCart className="w-5 h-5 text-orange-300" />
+                  {t("Add to Rental Cart — review before WhatsApp", "ভাড়ার কার্টে যোগ করুন — WhatsApp-এর আগে রিভিউ")}
                 </button>
+
+                {/* Direct quote (for single item, skips cart) */}
+                <a
+                  href={getWhatsAppRentUrl(equipment.name, equipment.id, equipment.capacity)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full flex items-center justify-center gap-3 py-3.5 rounded-2xl glass hover:bg-white/10 text-white/80 font-medium text-sm transition-all border border-white/10"
+                >
+                  <svg className="w-4 h-4 text-green-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+                  {t("Quick WhatsApp quote (single unit)", "দ্রুত WhatsApp কোটেশন (একক ইউনিট)")}
+                </a>
               </div>
             </div>
           </div>

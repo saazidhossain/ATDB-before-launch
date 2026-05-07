@@ -62,17 +62,51 @@ export default function About() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="eyebrow mb-3">{t("Credentials", "ক্রেডেনশিয়াল")}</p>
           <h2 className="text-3xl md:text-4xl font-bold font-display">{t("Certified, compliant, audit-ready.", "সার্টিফাইড, কমপ্লায়েন্ট, অডিট-প্রস্তুত।")}</h2>
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-5">
-            <div className="glass-card rounded-2xl p-6">
-              <p className="text-[11px] tracking-[0.22em] text-white/50 mb-1">{t("INSPECTION", "পরিদর্শন")}</p>
-              <p className="font-semibold font-display">{t("City Inspection Services", "সিটি ইন্সপেকশন সার্ভিসেস")}</p>
-              <p className="text-sm text-white/50 mt-1">CIS/077/2018</p>
-            </div>
-            <div className="glass-card rounded-2xl p-6">
-              <p className="text-[11px] tracking-[0.22em] text-white/50 mb-1">{t("CLASS", "শ্রেণি")}</p>
-              <p className="font-semibold font-display">{t("1st Class Contractor & Supplier", "১ম শ্রেণির ঠিকাদার ও সরবরাহকারী")}</p>
-              <p className="text-sm text-white/50 mt-1">{t("TIN, VAT, Trade License — full documentation.", "TIN, VAT, ট্রেড লাইসেন্স — সম্পূর্ণ ডকুমেন্টেশন।")}</p>
-            </div>
+          <p className="text-white/50 mt-3 max-w-2xl">{t("Independently inspected, government-classed and fully documented for tender submissions.", "স্বাধীন পরিদর্শিত, সরকার-শ্রেণিভুক্ত এবং টেন্ডারের জন্য সম্পূর্ণ ডকুমেন্টেড।")}</p>
+
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[
+              {
+                code: "ISO 9001",
+                title: t("Quality Management", "কোয়ালিটি ম্যানেজমেন্ট"),
+                ref: t("Aligned process & maintenance standards", "প্রসেস ও মেইনটেন্যান্স মান অনুসরণ"),
+                ring: "from-blue-500/30 to-blue-500/0",
+                badge: "ISO",
+              },
+              {
+                code: "CIS",
+                title: t("City Inspection Services", "সিটি ইন্সপেকশন সার্ভিসেস"),
+                ref: "CIS/077/2018",
+                ring: "from-emerald-500/30 to-emerald-500/0",
+                badge: "CIS",
+              },
+              {
+                code: t("1st Class", "১ম শ্রেণি"),
+                title: t("Contractor & Supplier", "ঠিকাদার ও সরবরাহকারী"),
+                ref: t("Govt. of Bangladesh classification", "বাংলাদেশ সরকার শ্রেণিভুক্ত"),
+                ring: "from-orange-500/30 to-orange-500/0",
+                badge: "1st",
+              },
+            ].map(c => (
+              <div key={c.title as string} className="glass-card rounded-2xl p-6 glass-hover relative overflow-hidden">
+                <div aria-hidden className={`absolute -top-12 -right-12 w-40 h-40 rounded-full bg-gradient-to-br ${c.ring} blur-2xl`} />
+                <div className="relative flex items-start gap-4">
+                  {/* Visual seal placeholder */}
+                  <div className="flex-shrink-0 w-16 h-16 rounded-full border-2 border-orange-400/40 bg-white/5 flex items-center justify-center text-orange-300 font-display font-bold text-sm tracking-wide">
+                    {c.badge}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[11px] tracking-[0.22em] text-white/50 mb-1">{c.code}</p>
+                    <p className="font-semibold font-display">{c.title}</p>
+                    <p className="text-sm text-white/50 mt-1">{c.ref}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-5 glass-card rounded-2xl p-5 text-sm text-white/60">
+            {t("TIN, VAT and Trade License documentation available on request for tender pre-qualification.", "TIN, VAT ও ট্রেড লাইসেন্স ডকুমেন্টেশন টেন্ডার প্রি-কোয়ালিফিকেশনের জন্য অনুরোধে সরবরাহ করা হয়।")}
           </div>
         </div>
       </section>
