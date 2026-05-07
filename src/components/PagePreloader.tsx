@@ -15,6 +15,9 @@ export default function PagePreloader() {
       if (done) return;
       done = true;
       setHidden(true);
+      // Notify SkeletonShimmer (and any other coordinated overlay) so it
+      // can begin its own fade in lockstep — no flicker between layers.
+      window.dispatchEvent(new CustomEvent("atdb:preloader-exit"));
       // Remove from DOM after fade-out so it can't intercept events
       window.setTimeout(() => setRemoved(true), 320);
     };

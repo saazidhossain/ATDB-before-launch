@@ -36,14 +36,21 @@ export default function HitboxDebug() {
   useEffect(() => {
     if (!enabled) return;
     let raf = 0;
+    let scanTimer: number | null = null;
+    let lastScan = 0;
+    const MIN_INTERVAL = 250; // ms — hard floor between scans
+
     const scan = () => {
+      lastScan = performance.now();
       const found: Box[] = [];
       const els = document.querySelectorAll<HTMLElement>(SELECTOR);
       els.forEach((el) => {
-        // Skip overlay-internal nodes
         if (el.closest("[data-hitbox-overlay]")) return;
         const r = el.getBoundingClientRect();
         if (r.width === 0 || r.height === 0) return;
+        // Skip offscreen elements — they don't need highlighting and
+        // dominate cost on long pages.
+        if (r.bottom < -200 || r.top > window.innerHeight + 200) return;
         if (r.width < 44 || r.height < 44) {
           found.push({
             x: r.left,
@@ -56,20 +63,42 @@ export default function HitboxDebug() {
       });
       setBoxes(found);
     };
-    const tick = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(scan);
+
+    // Throttled scheduler: coalesces bursts of events into one rAF
+    // and enforces a minimum gap of MIN_INTERVAL between actual scans.
+    const schedule = () => {
+      if (scanTimer != null) return;
+      const elapsed = performance.now() - lastScan;
+      const wait = Math.max(0, MIN_INTERVAL - elapsed);
+      scanTimer = window.setTimeout(() => {
+        scanTimer = null;
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(scan);
+      }, wait);
     };
+
     scan();
-    window.addEventListener("scroll", tick, { passive: true });
-    window.addEventListener("resize", tick);
-    const mo = new MutationObserver(tick);
-    mo.observe(document.body, { childList: true, subtree: true, attributes: true });
-    const interval = window.setInterval(scan, 1500);
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+
+    // MutationObserver: ignore attribute churn (style/class flips during
+    // animations cause heavy noise). Only react to structural changes.
+    const mo = new MutationObserver(schedule);
+    mo.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: false,
+      characterData: false,
+    });
+
+    // Low-frequency safety re-scan for layouts that settle after fonts/images.
+    const interval = window.setInterval(schedule, 3000);
+
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", tick);
-      window.removeEventListener("resize", tick);
+      if (scanTimer != null) window.clearTimeout(scanTimer);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
       mo.disconnect();
       window.clearInterval(interval);
     };
