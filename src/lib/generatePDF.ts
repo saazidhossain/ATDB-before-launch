@@ -78,19 +78,31 @@ async function loadImage(
     });
     const w = img.naturalWidth || 1;
     const h = img.naturalHeight || 1;
+    // Cap the canvas at ~1600px on the long edge so the PDF stays
+    // print-sharp without bloating file size for the WEBP source.
+    const MAX = 1600;
+    const scale = Math.min(1, MAX / Math.max(w, h));
+    const cw = Math.max(1, Math.round(w * scale));
+    const ch = Math.max(1, Math.round(h * scale));
     const canvas = document.createElement("canvas");
-    canvas.width = w;
-    canvas.height = h;
+    canvas.width = cw;
+    canvas.height = ch;
     const ctx = canvas.getContext("2d");
     if (!ctx) return null;
-    ctx.drawImage(img, 0, 0);
-    return { dataUrl: canvas.toDataURL("image/png"), w, h };
+    ctx.imageSmoothingEnabled = true;
+    (ctx as any).imageSmoothingQuality = "high";
+    ctx.drawImage(img, 0, 0, cw, ch);
+    // JPEG keeps the embedded asset small while preserving photo quality.
+    return { dataUrl: canvas.toDataURL("image/jpeg", 0.92), w: cw, h: ch };
   } catch {
     return null;
   }
 }
 
-/** Draw an image scaled "cover" into a target box, then thin border. */
+/** Draw an image scaled "contain" into a target box, then thin border.
+ *  We always preserve aspect ratio and letterbox into a soft panel fill
+ *  so nothing overflows the box (jsPDF can't clip raster images).
+ */
 function drawCoverImage(
   doc: jsPDF,
   img: { dataUrl: string; w: number; h: number },
@@ -98,30 +110,25 @@ function drawCoverImage(
 ) {
   const ratio = img.w / img.h;
   const boxRatio = bw / bh;
-  let dw = bw, dh = bh, dx = x, dy = y;
+  let dw: number, dh: number, dx: number, dy: number;
   if (ratio > boxRatio) {
-    // image wider → match height, crop width by drawing wider then clip
-    dh = bh;
-    dw = bh * ratio;
-    dx = x - (dw - bw) / 2;
-  } else {
+    // image wider than box → fit width, letterbox vertically
     dw = bw;
     dh = bw / ratio;
-    dy = y - (dh - bh) / 2;
-  }
-  // jsPDF lacks clipping for images; emulate "cover" by computing fit
-  // that fully covers but we draw a "contain" instead to avoid overflow
-  // outside the box. Recompute:
-  if (ratio > boxRatio) {
-    dh = bh; dw = bh * ratio; dx = x + (bw - dw) / 2; dy = y;
+    dx = x;
+    dy = y + (bh - dh) / 2;
   } else {
-    dw = bw; dh = bw / ratio; dx = x; dy = y + (bh - dh) / 2;
+    // image taller than box → fit height, letterbox horizontally
+    dh = bh;
+    dw = bh * ratio;
+    dx = x + (bw - dw) / 2;
+    dy = y;
   }
-  // Background fill to mask any letterbox
+  // Background fill so any letterbox area looks intentional.
   doc.setFillColor(...BRAND.panel);
   doc.rect(x, y, bw, bh, "F");
   try {
-    doc.addImage(img.dataUrl, "PNG", dx, dy, dw, dh);
+    doc.addImage(img.dataUrl, "JPEG", dx, dy, dw, dh, undefined, "FAST");
   } catch { /* ignore bad images */ }
   doc.setDrawColor(...BRAND.hair);
   doc.setLineWidth(0.3);
@@ -142,7 +149,7 @@ async function drawHeader(doc: jsPDF, logo: Awaited<ReturnType<typeof loadImage>
       const ratio = logo.w / logo.h;
       const lh = 22;
       const lw = Math.min(34, lh * ratio);
-      doc.addImage(logo.dataUrl, "PNG", MARGIN_X, (HEADER_H - lh) / 2, lw, lh);
+      doc.addImage(logo.dataUrl, "JPEG", MARGIN_X, (HEADER_H - lh) / 2, lw, lh);
     } catch { /* ignore */ }
   }
 
@@ -291,10 +298,14 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
     doc.text(k, factsX + 4, ry + 4);
 
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(10);
+    // Auto-shrink long values so 50-Tons / "Backhoe Loader" never clip.
+    let valSize = 10;
+    while (valSize > 7.5 && doc.getStringUnitWidth(v) * valSize / doc.internal.scaleFactor > factsW - 8) {
+      valSize -= 0.5;
+    }
+    doc.setFontSize(valSize);
     doc.setTextColor(...BRAND.ink);
-    const valLines = doc.splitTextToSize(v, factsW - 8);
-    doc.text(valLines[0] || "—", factsX + 4, ry + 9);
+    doc.text(v || "—", factsX + 4, ry + 9);
   });
 
   y = heroY + heroH + 10;
@@ -346,8 +357,11 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9.5);
   doc.setTextColor(...BRAND.body);
-  const desc = STR.descFallback;
-  const descLines = doc.splitTextToSize(desc, contentW);
+  const personalised =
+    `${eq.brand} ${eq.model} (${eq.notes || eq.categoryLabel}) — ${eq.capacity}, ` +
+    `${eq.fuel.toLowerCase()}, ${eq.origin}-built, year ${eq.year}. ` +
+    STR.descFallback;
+  const descLines = doc.splitTextToSize(personalised, contentW);
   doc.text(descLines, MARGIN_X, y + 4);
   y += descLines.length * 4.6 + 8;
 
@@ -410,11 +424,16 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(9.5);
+  // Evenly distribute the three contact lines so nothing clips on A4.
+  const ctaInnerW = contentW - 14;
+  const colW = ctaInnerW / 3;
+  const baseX = MARGIN_X + 7;
+  const baseY = y + ctaH - 9;
   doc.setTextColor(...BRAND.orange);
-  doc.text(STR.contactWa,    MARGIN_X + 7, y + ctaH - 9);
+  doc.text(STR.contactWa,    baseX,                 baseY);
   doc.setTextColor(...BRAND.white);
-  doc.text(STR.contactEmail, MARGIN_X + 75, y + ctaH - 9);
-  doc.text(STR.contactWeb,   MARGIN_X + 145, y + ctaH - 9);
+  doc.text(STR.contactEmail, baseX + colW,          baseY);
+  doc.text(STR.contactWeb,   baseX + colW * 2,      baseY);
 
   // ── Paginate footer on every page ──────────────────────────────────
   const totalPages = doc.getNumberOfPages();
