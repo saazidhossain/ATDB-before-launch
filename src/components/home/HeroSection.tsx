@@ -7,14 +7,24 @@ import HeroMedia from "./HeroMedia";
 export default function HeroSection() {
   const { t } = useLang();
   return (
-    <section className="relative min-h-screen flex items-end pb-20 md:pb-28 overflow-hidden">
-      {/* Cinematic auto-rotating media (videos + stills) */}
+    <section
+      className="relative flex flex-col justify-end overflow-hidden"
+      style={{ minHeight: "100dvh" }}
+    >
+      {/* Cinematic looping hero video background */}
       <HeroMedia />
 
       {/* Single subtle ambient glow — replaces noisy floating dots */}
-      <div aria-hidden className="pointer-events-none absolute -bottom-24 -left-20 w-[32rem] h-[32rem] rounded-full bg-orange-500/[0.07] blur-3xl" />
+      <div aria-hidden className="pointer-events-none absolute -bottom-24 -left-20 w-[32rem] h-[32rem] rounded-full bg-orange-500/[0.07] blur-3xl" style={{ zIndex: 2 }} />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div
+        className="relative z-10 max-w-7xl mx-auto w-full"
+        style={{
+          paddingBottom: "clamp(5rem, 12vh, 9rem)",
+          paddingLeft: "clamp(1.5rem, 7vw, 6rem)",
+          paddingRight: "clamp(1.5rem, 7vw, 6rem)",
+        }}
+      >
         <p className="text-xs font-mono tracking-[0.3em] text-white/50 uppercase mb-6">
           {t("Since 2000 · Dhaka & Tangail, Bangladesh", "২০০০ সাল থেকে · ঢাকা ও টাঙ্গাইল, বাংলাদেশ")}
         </p>
