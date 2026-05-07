@@ -194,6 +194,20 @@ html {
   animation: logo-enter 600ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
+/* Footer staggered column reveal */
+@keyframes footer-rise {
+  0%   { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.footer-rise { animation: footer-rise 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+
+/* Slow ambient pulse for footer corner glows */
+@keyframes footer-glow-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.08); }
+}
+.footer-glow { animation: footer-glow-pulse 10s ease-in-out infinite; }
+
 /* CSS-only light sweep on hover for the logo mark */
 .logo-sweep { position: relative; overflow: hidden; border-radius: 0.75rem; }
 .logo-sweep::after {
