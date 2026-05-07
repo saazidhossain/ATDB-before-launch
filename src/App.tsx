@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { LangProvider } from "@/hooks/useLang";
 import { CartProvider } from "@/hooks/useCart";
 import CartDrawer from "@/components/CartDrawer";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import Index from "./pages/Index";
 
 // Code-split non-landing routes — keeps the initial JS bundle small
@@ -26,31 +27,35 @@ const RouteFallback = () => (
 );
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <LangProvider>
-      <CartProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Suspense fallback={<RouteFallback />}>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/equipment" element={<Equipment />} />
-                <Route path="/equipment/:category" element={<Equipment />} />
-                <Route path="/equipment/:category/:id" element={<EquipmentDetail />} />
-                <Route path="/projects" element={<Projects />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
-          <CartDrawer />
-          </BrowserRouter>
-        </TooltipProvider>
-      </CartProvider>
-    </LangProvider>
-  </QueryClientProvider>
+  <ErrorBoundary routeName="root">
+    <QueryClientProvider client={queryClient}>
+      <LangProvider>
+        <CartProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <ErrorBoundary routeName="router">
+                <Suspense fallback={<RouteFallback />}>
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/equipment" element={<Equipment />} />
+                    <Route path="/equipment/:category" element={<Equipment />} />
+                    <Route path="/equipment/:category/:id" element={<EquipmentDetail />} />
+                    <Route path="/projects" element={<Projects />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </Suspense>
+              </ErrorBoundary>
+              <CartDrawer />
+            </BrowserRouter>
+          </TooltipProvider>
+        </CartProvider>
+      </LangProvider>
+    </QueryClientProvider>
+  </ErrorBoundary>
 );
 
 export default App;
