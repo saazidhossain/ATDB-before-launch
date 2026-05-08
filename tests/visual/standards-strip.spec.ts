@@ -13,7 +13,12 @@ import { test, expect } from "@playwright/test";
  *   4. asserts the section never overflows the viewport horizontally
  */
 test.describe("StandardsStrip — no left-edge artifacts", () => {
-  test.beforeEach(async ({ page }) => {
+  // Per-project baseline (mobile / tablet / desktop from playwright.config.ts).
+  // Plus explicit narrow-mobile widths to catch breakpoint-specific pill artifacts
+  // that only appear on the smallest devices.
+  const EXTRA_MOBILE_WIDTHS = [320, 360, 375, 390, 414];
+
+  async function setup(page: import("@playwright/test").Page) {
     await page.addInitScript(() => {
       const css = `*,*::before,*::after{animation-duration:0s!important;animation-delay:0s!important;transition-duration:0s!important;transition-delay:0s!important}`;
       const s = document.createElement("style");
@@ -22,9 +27,12 @@ test.describe("StandardsStrip — no left-edge artifacts", () => {
     });
     await page.goto("/");
     await page.waitForLoadState("networkidle");
-  });
+  }
 
-  test("renders cleanly with no marker/pill artifacts and no horizontal overflow", async ({ page }) => {
+  async function assertClean(
+    page: import("@playwright/test").Page,
+    snapshotName: string
+  ) {
     const section = page
       .locator("section")
       .filter({ hasText: /International Standards|আন্তর্জাতিক মান/ })
@@ -33,8 +41,8 @@ test.describe("StandardsStrip — no left-edge artifacts", () => {
     await page.waitForTimeout(400);
     await expect(section).toBeVisible();
 
-    // 1. Pixel-diff baseline per breakpoint.
-    await expect(section).toHaveScreenshot("standards-strip.png");
+    // 1. Pixel-diff baseline.
+    await expect(section).toHaveScreenshot(snapshotName);
 
     // 2. No <li> marker shows visible glyph content.
     const markerContents = await section.locator("li").evaluateAll(els =>
@@ -70,5 +78,18 @@ test.describe("StandardsStrip — no left-edge artifacts", () => {
       win: window.innerWidth,
     }));
     expect(overflow.doc, "document has horizontal overflow").toBeLessThanOrEqual(overflow.win + 1);
+  }
+
+  test("renders cleanly at the project's default viewport", async ({ page }) => {
+    await setup(page);
+    await assertClean(page, "standards-strip.png");
   });
+
+  for (const width of EXTRA_MOBILE_WIDTHS) {
+    test(`renders cleanly at ${width}px wide`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 844 });
+      await setup(page);
+      await assertClean(page, `standards-strip-${width}.png`);
+    });
+  }
 });
