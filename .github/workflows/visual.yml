@@ -32,6 +32,9 @@ jobs:
       - name: Run Playwright visual tests
         run: npx playwright test
 
+      - name: Run StandardsStrip visual regression (explicit gate)
+        run: npx playwright test tests/visual/standards-strip.spec.ts --reporter=github
+
       - name: Upload diff report on failure
         if: failure()
         uses: actions/upload-artifact@v4
