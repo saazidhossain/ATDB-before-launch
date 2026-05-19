@@ -108,7 +108,7 @@ export default function Footer() {
             target="_blank"
             rel="noopener noreferrer author"
             title="Sazid Hossain — Architect & Designer · Award-Winning Portfolio"
-            className="group inline-flex items-center gap-2 text-[11px] tracking-[0.28em] text-white/55 hover:text-orange-300 transition-colors"
+            className="group inline-flex items-center gap-2 text-[11px] tracking-[0.28em] text-white/55 hover:text-orange-300 transition-colors border-none"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-orange-400 shadow-[0_0_10px_rgba(245,130,32,0.8)] group-hover:scale-150 transition-transform" />
             <span className="link-underline">{t("A SAZID HOSSAIN ARCHITECTURE", "একটি সাজিদ হোসেন স্থাপত্য")}</span>

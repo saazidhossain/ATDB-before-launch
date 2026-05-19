@@ -9,15 +9,15 @@ export default function StandardsStrip() {
       icon: ShieldCheck,
       code: "ISO 9001",
       label: t("Quality Management", "কোয়ালিটি ম্যানেজমেন্ট"),
-      tone: "text-blue-300",
-      ring: "ring-blue-400/30",
+      tone: "text-blue-300 bg-slate-800",
+      ring: "ring-orange-400/30",
     },
     {
       icon: BadgeCheck,
       code: "CIS",
       label: t("City Inspection Services · Bangladesh", "সিটি ইন্সপেকশন সার্ভিসেস · বাংলাদেশ"),
       tone: "text-emerald-300",
-      ring: "ring-emerald-400/30",
+      ring: "ring-orange-400/30",
     },
     {
       icon: Award,
@@ -30,8 +30,8 @@ export default function StandardsStrip() {
 
   return (
     <section className="relative w-full max-w-full py-14 md:py-20 border-t border-white/5 overflow-hidden [contain:layout_paint] [transform:translateZ(0)]">
-      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 box-border">
-        <div className="text-center mb-10">
+      <div className="relative w-full max-w-7xl sm:px-6 lg:px-8 box-border text-justify py-0 mx-[2px] px-[20px]">
+        <div className="mb-10">
           <p className="eyebrow mb-3">
             {t("International Standards & Compliance", "আন্তর্জাতিক মান ও কমপ্লায়েন্স")}
           </p>
@@ -43,15 +43,15 @@ export default function StandardsStrip() {
           </h2>
         </div>
 
-        <ul className="list-none grid grid-cols-1 sm:grid-cols-3 gap-4 p-0 m-0 w-full max-w-full box-border [&>li]:list-none [&>li]:!ml-0 [&>li]:!pl-0 [&>li]:before:content-none [&>li]:marker:content-['']">
+        <ul className="list-none grid grid-cols-1 sm:grid-cols-3 gap-4 p-0 m-0 w-full max-w-full box-border [&>li]:list-none [&>li]:!ml-0 [&>li]:!pl-0 [&>li]:before:content-none [&>li]:marker:content-[''] font-bold text-justify border-2 border-none rounded-sm">
           {items.map((it) => (
-            <li key={it.code as string} className="list-none w-full max-w-full box-border">
+            <li key={it.code as string} className="list-none w-full max-w-full box-border text-justify">
               <Link
                 to="/about"
                 aria-label={`${it.code} — ${it.label}`}
-                className={`group block w-full max-w-full h-full box-border glass-card glass-hover rounded-2xl p-5 ring-1 ${it.ring} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background`}
+                className={`group block w-full max-w-full h-full box-border glass-card glass-hover p-5 ring-1 ${it.ring} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background text-center mx-0 border-none border-0 shadow rounded-2xl`}
               >
-                <div className="flex items-start gap-4 w-full">
+                <div className="flex items-start gap-4 w-full text-center">
                   <span className="w-12 h-12 rounded-full bg-white/[0.04] ring-1 ring-white/10 flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 group-focus-visible:scale-105">
                     <it.icon className={`w-6 h-6 ${it.tone}`} aria-hidden="true" />
                   </span>
