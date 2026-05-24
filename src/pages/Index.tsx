@@ -7,7 +7,6 @@ import EquipmentCategories from "@/components/home/EquipmentCategories";
 import FeaturedEquipment from "@/components/home/FeaturedEquipment";
 import LiveFleetPhotos from "@/components/home/LiveFleetPhotos";
 import ProjectHighlights from "@/components/home/ProjectHighlights";
-import StandardsStrip from "@/components/home/StandardsStrip";
 import ScrollProgress from "@/components/ScrollProgress";
 import PagePreloader from "@/components/PagePreloader";
 import SkeletonShimmer from "@/components/SkeletonShimmer";
@@ -65,8 +64,6 @@ export default function Index() {
       </Suspense>
       <SectionDivider />
       <RevealOnScroll><ProjectHighlights /></RevealOnScroll>
-      <SectionDivider />
-      <RevealOnScroll className="block w-full max-w-full overflow-hidden"><StandardsStrip /></RevealOnScroll>
       <SectionDivider />
       <Suspense fallback={<Reserve minHeight={300} />}>
         <RevealOnScroll><CTASection /></RevealOnScroll>
