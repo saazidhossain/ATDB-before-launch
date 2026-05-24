@@ -42,7 +42,7 @@ export default function AnimatedLogo({ size = 44, withWordmark = false, classNam
   ) : null;
 
   const content = (
-    <span className={`inline-flex items-center gap-3 group ${className}`}>
+    <span className={`inline-flex items-center gap-3 group text-left mx-[3px] my-0 px-px py-[2px] ${className}`}>
       {inner}
       {wordmark}
     </span>

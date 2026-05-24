@@ -29,9 +29,9 @@ export default function HeroSection() {
           {t("​", "​")}
         </p>
 
-        <h1 className="display-hero max-w-4xl font-display">
+        <h1 className="display-hero max-w-4xl font-display text-4xl py-[23px] text-left">
           {t("Bangladesh's premier ", "বাংলাদেশের সেরা ")}
-          <span className="text-shimmer">{t("heavy equipment", "হেভি ইকুইপমেন্ট")}</span>
+          <span className="text-shimmer mx-0 rounded-lg font-serif text-5xl">{t("HeavY Equipment", "হেভি ইকুইপমেন্ট")}</span>
           {t(" rental partner.", " রেন্টাল পার্টনার।")}
         </h1>
 
@@ -61,7 +61,7 @@ export default function HeroSection() {
             { value: "25", label: t("Skilled Staff", "দক্ষ কর্মী") },
             { value: "2", label: t("Office Locations", "অফিস") },
           ].map(stat => (
-            <div key={stat.label} className="glass-card rounded-xl p-4 text-center hover:bg-white/10 transition-all">
+            <div key={stat.label} className="glass-card rounded-xl p-4 hover:bg-white/10 transition-all">
               <div className="text-2xl md:text-3xl font-bold text-orange-400">{stat.value}</div>
               <div className="text-xs text-white/50 mt-1 tracking-wide">{stat.label}</div>
             </div>

@@ -30,7 +30,7 @@ export default function Footer() {
           <div className="footer-rise" style={{ animationDelay: "0ms" }}>
             <AnimatedLogo className="md:!w-11 md:!h-11" size={88} />
             <p className="mt-5 max-w-[19rem] text-white/60 text-sm leading-relaxed">
-              {t("Bangladesh's premier heavy equipment rental partner. Since 2000.", "বাংলাদেশের সেরা হেভি ইকুইপমেন্ট রেন্টাল পার্টনার। ২০০০ সাল থেকে।")}
+              {t("Bangladesh's premier HeavY Equipment rental partner. Since 2000.", "বাংলাদেশের সেরা হেভি ইকুইপমেন্ট রেন্টাল পার্টনার। ২০০০ সাল থেকে।")}
             </p>
           </div>
 
