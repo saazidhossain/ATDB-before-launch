@@ -43,7 +43,7 @@ export default function StandardsStrip() {
           </h2>
         </div>
 
-        <ul className="list-none grid grid-cols-1 sm:grid-cols-3 gap-4 p-0 m-0 w-full max-w-full box-border [&>li]:list-none [&>li]:!ml-0 [&>li]:!pl-0 [&>li]:before:content-none [&>li]:marker:content-[''] font-bold border-2 border-none rounded-sm text-xs text-left mx-[5px] px-[5px]">
+        <ul className="list-none grid grid-cols-1 sm:grid-cols-3 gap-4 p-0 m-0 w-full max-w-full box-border [&>li]:list-none [&>li]:!ml-0 [&>li]:!pl-0 [&>li]:before:content-none [&>li]:marker:content-[''] font-bold border-2 border-none text-xs text-left mx-[5px] px-[5px] rounded-none">
           {items.map((it) => (
             <li key={it.code as string} className="list-none w-full max-w-full box-border text-justify">
               <Link
