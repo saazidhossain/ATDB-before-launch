@@ -42,17 +42,18 @@ export default function About() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="eyebrow mb-3">{t("Leadership", "নেতৃত্ব")}</p>
           <h2 className="text-3xl md:text-4xl font-bold font-display max-w-3xl">{t("A family-owned operation, professionally run.", "পারিবারিক মালিকানাধীন প্রতিষ্ঠান, পেশাদারভাবে পরিচালিত।")}</h2>
-          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
               { role: t("PROPRIETOR", "মালিক"), name: t("Md. Saiful Alam (Milon)", "মো. সাইফুল আলম (মিলন)"), phone: "+8801712106242" },
               { role: t("CHIEF EXECUTIVE OFFICER", "প্রধান নির্বাহী কর্মকর্তা"), name: t("Md. Rezaur Rahman Khan (Baboo)", "মো. রেজাউর রহমান খান (বাবু)"), phone: "+8801816666067" },
+              { role: t("DIRECTOR", "পরিচালক"), name: t("Fayyaz Alam", "ফায়াজ আলম"), phone: "+8801717221930" },
             ].map(p => (
               <div key={p.role} className="glass-card rounded-2xl p-6 glass-hover card-tilt flex items-start gap-4">
                 <UserCircle2 className="w-10 h-10 text-orange-400 flex-shrink-0" />
-                <div>
+                <div className="min-w-0">
                   <p className="text-[11px] tracking-[0.22em] text-white/50 mb-1">{p.role}</p>
-                  <h3 className="text-xl font-semibold font-display">{p.name}</h3>
-                  <a href={`tel:${p.phone}`} className="text-sm text-orange-300 hover:text-orange-200 mt-1 inline-block">{p.phone}</a>
+                  <h3 className="text-xl font-semibold font-display break-words">{p.name}</h3>
+                  <a href={`tel:${p.phone}`} className="text-sm text-orange-300 hover:text-orange-200 mt-1 inline-block break-all">{p.phone}</a>
                 </div>
               </div>
             ))}
