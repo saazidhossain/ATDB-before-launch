@@ -29,7 +29,7 @@ export default function StandardsStrip() {
   ];
 
   return (
-    <section className="relative w-full max-w-full py-14 md:py-20 border-t border-white/5 overflow-hidden [contain:layout_paint] [transform:translateZ(0)]">
+    <section className="relative w-full max-w-full py-14 md:py-20 border-t border-white/5 overflow-hidden [contain:layout_paint] [transform:translateZ(0)] text-justify">
       <div className="relative w-full max-w-7xl sm:px-6 lg:px-8 box-border text-justify py-0 mx-[2px] px-[20px]">
         <div className="mb-10">
           <p className="eyebrow mb-3">
@@ -49,7 +49,7 @@ export default function StandardsStrip() {
               <Link
                 to="/about"
                 aria-label={`${it.code} — ${it.label}`}
-                className={`group block w-full max-w-full h-full box-border glass-card glass-hover p-5 ring-1 ${it.ring} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background text-center mx-0 border-none border-0 shadow rounded-2xl`}
+                className={`group block w-full max-w-full h-full box-border glass-card glass-hover p-5 ring-1 ${it.ring} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background mx-0 border-none border-0 shadow rounded-2xl text-justify`}
               >
                 <div className="flex items-start gap-4 w-full text-center">
                   <span className="w-12 h-12 rounded-full bg-white/[0.04] ring-1 ring-white/10 flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 group-focus-visible:scale-105">

@@ -24,7 +24,7 @@ export default function Footer() {
       {/* Top hairline accent */}
       <div aria-hidden className="pointer-events-none absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-500/40 to-transparent" />
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 md:py-20 text-justify">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.15fr_0.8fr_1.15fr_0.95fr] gap-10 md:gap-12 lg:gap-14">
           {/* Brand */}
           <div className="footer-rise" style={{ animationDelay: "0ms" }}>
@@ -102,7 +102,7 @@ export default function Footer() {
 
       {/* Bottom bar */}
       <div className="relative border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 pb-24 sm:pb-5 flex flex-col-reverse sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 pb-24 sm:pb-5 flex flex-col-reverse sm:flex-row items-center justify-between gap-4 text-justify sm:text-justify">
           <a
             href="https://behance.net/saazidhossain"
             target="_blank"

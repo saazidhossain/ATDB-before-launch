@@ -44,7 +44,7 @@ export default function WhyATDB() {
         </div>
 
         {/* 26-year professional timeline */}
-        <div className="relative">
+        <div className="relative text-justify px-[5px] py-[5px]">
           <div className="flex items-center gap-3 mb-8">
             <Milestone className="w-5 h-5 text-orange-400" />
             <p className="text-[11px] tracking-[0.28em] text-orange-300 uppercase font-semibold">{t("Our 26-Year Journey", "আমাদের ২৬ বছরের যাত্রা")}</p>
@@ -52,7 +52,7 @@ export default function WhyATDB() {
 
           <ol className="relative border-l border-orange-500/30 pl-6 sm:pl-8 space-y-6">
             {milestones.map((m) => (
-              <li key={m.year} className="relative">
+              <li key={m.year} className="relative text-justify px-[5px] py-[5px]">
                 <span
                   aria-hidden
                   className="absolute -left-[33px] sm:-left-[41px] top-1 w-4 h-4 rounded-full bg-orange-500 ring-4 ring-orange-500/15"

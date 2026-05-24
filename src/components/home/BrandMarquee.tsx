@@ -7,7 +7,7 @@ export default function BrandMarquee() {
   return (
     <section className="py-10 border-y border-white/5 overflow-hidden bg-background/50">
       <p className="text-center text-xs font-mono tracking-[0.3em] text-white/30 uppercase mb-6">{t("Trusted brands in our fleet", "আমাদের ফ্লিটের ব্র্যান্ডসমূহ")}</p>
-      <div className="relative">
+      <div className="relative text-justify px-[5px] py-[5px]">
         <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-background to-transparent z-10" />
         <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-background to-transparent z-10" />
         <div className="flex animate-marquee whitespace-nowrap">
