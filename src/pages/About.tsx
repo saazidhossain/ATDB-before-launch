@@ -46,7 +46,7 @@ export default function About() {
             {[
               { role: t("PROPRIETOR", "মালিক"), name: t("Md. Saiful Alam (Milon)", "মো. সাইফুল আলম (মিলন)"), phone: "+8801712106242" },
               { role: t("CHIEF EXECUTIVE OFFICER", "প্রধান নির্বাহী কর্মকর্তা"), name: t("Md. Rezaur Rahman Khan (Baboo)", "মো. রেজাউর রহমান খান (বাবু)"), phone: "+8801816666067" },
-              { role: t("DIRECTOR", "পরিচালক"), name: t("Fayyaz Alam", "ফায়াজ আলম"), phone: "+8801717221930" },
+              { role: t("DIRECTOR", "পরিচালক"), name: t("Fayyaz Alam", "​ফাইয়াজ আলম"), phone: "+8801717221930" },
             ].map(p => (
               <div key={p.role} className="glass-card rounded-2xl p-6 glass-hover card-tilt flex items-start gap-4 py-[24px]">
                 <UserCircle2 className="lucide lucide-circle-user-round w-10 h-10 text-orange-400 flex-shrink-0 my-[26px]" />
