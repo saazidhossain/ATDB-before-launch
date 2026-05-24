@@ -29,13 +29,13 @@ export default function StandardsStrip() {
   ];
 
   return (
-    <section className="relative w-full max-w-full py-14 md:py-20 border-t border-white/5 overflow-hidden [contain:layout_paint] [transform:translateZ(0)] text-justify">
-      <div className="relative w-full max-w-7xl sm:px-6 lg:px-8 box-border text-justify py-0 mx-[2px] px-[20px]">
+    <section className="relative w-full py-14 md:py-20 border-t border-white/5 overflow-hidden">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-10">
           <p className="eyebrow mb-3">
             {t("International Standards & Compliance", "আন্তর্জাতিক মান ও কমপ্লায়েন্স")}
           </p>
-          <h2 className="text-2xl md:text-3xl font-bold font-display max-w-2xl mx-auto">
+          <h2 className="text-2xl md:text-3xl font-bold font-display max-w-2xl">
             {t(
               "Audited, classed and tender-ready credentials.",
               "অডিটেড, শ্রেণিভুক্ত ও টেন্ডার-প্রস্তুত ক্রেডেনশিয়াল।"
@@ -43,23 +43,23 @@ export default function StandardsStrip() {
           </h2>
         </div>
 
-        <ul className="list-none grid grid-cols-1 sm:grid-cols-3 gap-4 p-0 m-0 w-full max-w-full box-border [&>li]:list-none [&>li]:!ml-0 [&>li]:!pl-0 [&>li]:before:content-none [&>li]:marker:content-[''] border-2 border-none rounded-none text-justify text-xs font-serif font-semibold my-0 mx-[5px] py-[11px] px-[15px]">
+        <ul className="list-none grid grid-cols-1 sm:grid-cols-3 gap-4 p-0 m-0 w-full [&>li]:list-none [&>li]:!ml-0 [&>li]:!pl-0 [&>li]:before:content-none [&>li]:marker:content-['']">
           {items.map((it) => (
-            <li key={it.code as string} className="list-none w-full max-w-full box-border text-justify py-[5px]">
+            <li key={it.code as string} className="w-full">
               <Link
                 to="/about"
                 aria-label={`${it.code} — ${it.label}`}
-                className={`group block w-full max-w-full h-full box-border glass-card glass-hover p-5 ring-1 ${it.ring} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background mx-0 border-none border-0 shadow text-justify rounded-2xl py-[11px]`}
+                className={`group block w-full h-full glass-card glass-hover rounded-2xl p-5 ring-1 ${it.ring} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-transform hover:-translate-y-0.5`}
               >
-                <div className="flex items-start gap-4 w-full text-justify mx-[2px] px-[2px] py-[2px]">
-                  <span className="w-12 h-12 rounded-full bg-white/[0.04] ring-1 ring-white/10 flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 group-focus-visible:scale-105 mx-[5px] my-[5px] py-[3px]">
+                <div className="flex items-center gap-4 w-full">
+                  <span className="w-12 h-12 rounded-full bg-white/[0.04] ring-1 ring-white/10 flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105">
                     <it.icon className={`w-6 h-6 ${it.tone}`} aria-hidden="true" />
                   </span>
-                  <div className="min-w-0 flex-1 flex flex-col justify-center py-[3px]">
-                    <span className="block text-[11px] tracking-[0.22em] text-white/50 mb-1 break-words text-left">
+                  <div className="min-w-0 flex-1">
+                    <span className="block text-[11px] tracking-[0.22em] text-white/50 mb-1 break-words">
                       {it.code}
                     </span>
-                    <span className="block text-sm font-semibold text-white/85 leading-snug break-words text-left">
+                    <span className="block text-sm font-semibold text-white/85 leading-snug break-words">
                       {it.label}
                     </span>
                   </div>
