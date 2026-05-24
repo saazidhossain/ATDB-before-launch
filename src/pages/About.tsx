@@ -48,8 +48,8 @@ export default function About() {
               { role: t("CHIEF EXECUTIVE OFFICER", "প্রধান নির্বাহী কর্মকর্তা"), name: t("Md. Rezaur Rahman Khan (Baboo)", "মো. রেজাউর রহমান খান (বাবু)"), phone: "+8801816666067" },
               { role: t("DIRECTOR", "পরিচালক"), name: t("Fayyaz Alam", "ফায়াজ আলম"), phone: "+8801717221930" },
             ].map(p => (
-              <div key={p.role} className="glass-card rounded-2xl p-6 glass-hover card-tilt flex items-start gap-4">
-                <UserCircle2 className="w-10 h-10 text-orange-400 flex-shrink-0" />
+              <div key={p.role} className="glass-card rounded-2xl p-6 glass-hover card-tilt flex items-start gap-4 py-[24px]">
+                <UserCircle2 className="lucide lucide-circle-user-round w-10 h-10 text-orange-400 flex-shrink-0 my-[26px]" />
                 <div className="min-w-0">
                   <p className="text-[11px] tracking-[0.22em] text-white/50 mb-1">{p.role}</p>
                   <h3 className="text-xl font-semibold font-display break-words">{p.name}</h3>
