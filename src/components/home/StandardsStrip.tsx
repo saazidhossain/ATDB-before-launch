@@ -49,7 +49,7 @@ export default function StandardsStrip() {
               <Link
                 to="/about"
                 aria-label={`${it.code} — ${it.label}`}
-                className={`group block w-full max-w-full h-full box-border glass-card glass-hover p-5 ring-1 ${it.ring} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background mx-0 border-none border-0 shadow text-justify py-[16px] rounded-3xl`}
+                className={`group block w-full max-w-full h-full box-border glass-card glass-hover p-5 ring-1 ${it.ring} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background mx-0 border-none border-0 shadow text-justify py-[16px] rounded-2xl`}
               >
                 <div className="flex items-start gap-4 w-full text-justify mx-[2px] px-[2px] py-[2px]">
                   <span className="w-12 h-12 rounded-full bg-white/[0.04] ring-1 ring-white/10 flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 group-focus-visible:scale-105 mx-[5px] my-[5px] py-[3px]">
