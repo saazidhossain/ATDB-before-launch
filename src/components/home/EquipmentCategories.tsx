@@ -7,7 +7,7 @@ export default function EquipmentCategories() {
   const { t, lang } = useLang();
   return (
     <section className="section-padding">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <div className="flex items-end justify-between mb-12">
           <div>
             <p className="eyebrow mb-3">{t("Our Equipment", "আমাদের ইকুইপমেন্ট")}</p>

@@ -21,7 +21,7 @@ export default function Projects() {
       <section className="pt-28 pb-16 relative overflow-hidden">
         <div aria-hidden className="absolute inset-0 opacity-[0.07] bg-[url('/assets/jamuna-bridge-DWAJN5oY.jpg')] bg-cover bg-center" />
         <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-background/80 to-background" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-justify">
           <p className="eyebrow mb-3">{t("Project Portfolio", "প্রজেক্ট পোর্টফোলিও")}</p>
           <h1 className="text-4xl md:text-5xl font-bold font-display max-w-3xl">{t("Powering national infrastructure & industrial development.", "জাতীয় অবকাঠামো ও ইন্ডাস্ট্রিয়াল উন্নয়নে শক্তি যোগাচ্ছি।")}</h1>
           <p className="text-white/55 mt-5 max-w-2xl leading-relaxed">{t("M/S ATDB Trade International has successfully delivered a wide spectrum of heavy engineering, civil construction and infrastructure works across Bangladesh. Below is a categorised view of our major executed projects.", "মেসার্স ATDB ট্রেড ইন্টারন্যাশনাল সারা বাংলাদেশে বিভিন্ন ভারী প্রকৌশল, সিভিল কন্সট্রাকশন ও অবকাঠামোগত কাজ সফলভাবে সম্পন্ন করেছে। আমাদের উল্লেখযোগ্য সম্পন্নকৃত প্রজেক্টসমূহ ক্যাটাগরি অনুযায়ী নিচে দেওয়া হলো।")}</p>
@@ -61,7 +61,7 @@ export default function Projects() {
       ))}
 
       {/* CTA strip */}
-      <section className="relative">
+      <section className="relative text-justify px-[5px] py-[5px]">
         <div className="bg-gradient-to-r from-orange-600 to-orange-500">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div>

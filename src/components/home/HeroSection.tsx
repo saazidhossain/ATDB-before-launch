@@ -26,7 +26,7 @@ export default function HeroSection() {
         }}
       >
         <p className="text-xs font-mono tracking-[0.3em] text-white/50 uppercase mb-6">
-          {t("Since 2000 · Dhaka & Tangail, Bangladesh", "২০০০ সাল থেকে · ঢাকা ও টাঙ্গাইল, বাংলাদেশ")}
+          {t("​", "​")}
         </p>
 
         <h1 className="display-hero max-w-4xl font-display">
