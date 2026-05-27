@@ -112,40 +112,40 @@ function VideoCard({ video }: { video: typeof fleetVideos[0] }) {
   );
 }
 
-export default function LiveFleetPhotos() {
-  const [activeFilter, setActiveFilter] = useState("all");
-  const { t, lang } = useLang();
-
-  const realItems = equipmentData
-    .filter(e => e.realPhotos && e.realPhotos.length > 0)
-    .flatMap(e =>
-      (e.realPhotos || []).map((photo, idx) => ({
-        src: photo,
-        id: e.id,
-        name: e.name,
-        nameBn: e.banglaLabel,
-        category: e.category,
-        categoryLabel: e.categoryLabel,
-        index: idx,
-        source: "real" as const,
-      }))
-    );
-
-  const aiItems = equipmentData
-    .filter(e => e.image && (!e.realPhotos || e.realPhotos.length === 0))
-    .slice(0, 8)
-    .map((e, idx) => ({
-      src: e.image,
+const realItems = equipmentData
+  .filter(e => e.realPhotos && e.realPhotos.length > 0)
+  .flatMap(e =>
+    (e.realPhotos || []).map((photo, idx) => ({
+      src: photo,
       id: e.id,
       name: e.name,
       nameBn: e.banglaLabel,
       category: e.category,
       categoryLabel: e.categoryLabel,
       index: idx,
-      source: "ai" as const,
-    }));
+      source: "real" as const,
+    }))
+  );
 
-  const photoItems = [...realItems, ...aiItems];
+const aiItems = equipmentData
+  .filter(e => e.image && (!e.realPhotos || e.realPhotos.length === 0))
+  .slice(0, 8)
+  .map((e, idx) => ({
+    src: e.image,
+    id: e.id,
+    name: e.name,
+    nameBn: e.banglaLabel,
+    category: e.category,
+    categoryLabel: e.categoryLabel,
+    index: idx,
+    source: "ai" as const,
+  }));
+
+const photoItems = [...realItems, ...aiItems];
+
+export default function LiveFleetPhotos() {
+  const [activeFilter, setActiveFilter] = useState("all");
+  const { t, lang } = useLang();
 
   const filters = [
     { key: "all", label: t("All", "সবগুলো") },
