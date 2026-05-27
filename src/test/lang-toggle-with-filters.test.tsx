@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { render, screen, fireEvent, within, cleanup } from "@testing-library/react";
+import { render, screen, fireEvent, cleanup } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { LangProvider, useLang } from "@/hooks/useLang";
 import LiveFleetPhotos from "@/components/home/LiveFleetPhotos";
