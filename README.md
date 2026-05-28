@@ -23,20 +23,25 @@ It supports internationalization (English/Bengali) and features fluid animations
 
 1. Clone the repository and navigate into the directory.
 2. Install dependencies:
-   ```bash
+   ```shell
    npm install
    ```
+
 ### Running the Development Server
 
-Start the application locally:
-   `npm run dev`
+Start the application locally using Vite:
+
+```shell
+npm run dev
+```
 
 The application will be available at `http://localhost:5173` by default.
 
 ## Scripts
 
+- `npm run dev`: Starts the development server.
 - `npm run build`: Builds the app for production.
-- `npm run lint`: Lints the codebase using ESlint.
+- `npm run lint`: Lints the codebase using ESLint.
 - `npm run test`: Runs the Vitest unit tests.
 - `npm run test:visual`: Runs visual regression tests using Playwright.
 
@@ -46,13 +51,13 @@ The project is configured for unit testing and visual regression testing:
 
 ### Unit Tests
 Run standard unit tests (Vitest + React Testing Library):
-```bash
+```shell
 npm run test
 ```
 
 ### Visual Regression Tests
 Run visual tests using Playwright:
-```bash
+```shell
 npm run test:visual
 ```
 *(Note: You may need to install Playwright dependencies first using `npx playwright install`)*
