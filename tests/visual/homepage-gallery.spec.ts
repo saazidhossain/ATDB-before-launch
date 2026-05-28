@@ -20,7 +20,7 @@ async function settle(page: import("@playwright/test").Page) {
     document.documentElement.appendChild(style);
   });
   await page.goto("/");
-  await page.waitForLoadState("networkidle");
+  await page.waitForLoadState("domcontentloaded");
   // Pause the hero gallery rotator if a Pause button is exposed.
   const pause = page.getByRole("button", { name: /pause/i }).first();
   if (await pause.isVisible().catch(() => false)) {
