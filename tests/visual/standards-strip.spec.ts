@@ -26,7 +26,7 @@ test.describe("StandardsStrip — no left-edge artifacts", () => {
       document.documentElement.appendChild(s);
     });
     await page.goto("/");
-    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
   }
 
   async function assertClean(
