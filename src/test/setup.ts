@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 
 // matchMedia mock that respects a global override so tests can simulate breakpoints.
 declare global {
-  // eslint-disable-next-line no-var
+
   var __VIEWPORT_WIDTH__: number | undefined;
 }
 

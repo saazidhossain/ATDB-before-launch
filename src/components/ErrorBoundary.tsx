@@ -26,7 +26,7 @@ export default class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     const route = typeof window !== "undefined" ? window.location.pathname : "(ssr)";
-    // eslint-disable-next-line no-console
+
     console.error(
       `[ErrorBoundary] crash at route="${route}" boundary="${this.props.routeName ?? "root"}"\n` +
         `${error.name}: ${error.message}\n` +

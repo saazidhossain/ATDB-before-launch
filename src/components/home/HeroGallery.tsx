@@ -95,7 +95,7 @@ export default function HeroGallery() {
                       height="820"
                       loading={i === 0 ? "eager" : "lazy"}
                       decoding={i === 0 ? "sync" : "async"}
-                      {...({ fetchpriority: i === 0 ? "high" : "low" } as any)}
+                      {...({ fetchpriority: i === 0 ? "high" : "low" })}
                       className="w-full h-full object-cover"
                     />
                   )
