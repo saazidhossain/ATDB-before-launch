@@ -39,7 +39,7 @@ export default function EquipmentDetail() {
   }, [equipment]);
 
   const toggleFullscreen = useCallback(() => {
-    const v = videoRef.current as any;
+    const v = videoRef.current as HTMLVideoElement & { webkitEnterFullscreen?: () => void; webkitRequestFullscreen?: () => void };
     if (!v) return;
     const req = v.requestFullscreen || v.webkitEnterFullscreen || v.webkitRequestFullscreen;
     if (req) req.call(v);

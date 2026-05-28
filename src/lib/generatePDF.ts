@@ -90,7 +90,7 @@ async function loadImage(
     const ctx = canvas.getContext("2d");
     if (!ctx) return null;
     ctx.imageSmoothingEnabled = true;
-    (ctx as any).imageSmoothingQuality = "high";
+    ctx.imageSmoothingQuality = "high";
     ctx.drawImage(img, 0, 0, cw, ch);
     // JPEG keeps the embedded asset small while preserving photo quality.
     return { dataUrl: canvas.toDataURL("image/jpeg", 0.92), w: cw, h: ch };
@@ -347,7 +347,7 @@ export async function generateEquipmentPDF(eq: EquipmentItem, _lang: Lang = "en"
     styles: { lineColor: BRAND.hair, lineWidth: 0.2 },
   });
 
-  y = (doc as any).lastAutoTable.finalY + 10;
+  y = (doc as jsPDF & { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 10;
 
   // ── Section: Description ───────────────────────────────────────────
   if (y > H - FOOTER_H - 60) { doc.addPage(); await drawHeader(doc, logo); y = HEADER_H + 10; }

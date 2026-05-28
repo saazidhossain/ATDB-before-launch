@@ -30,7 +30,7 @@ describe("Gallery translation audit (no English fallback)", () => {
   it("Bengali strings do not contain ASCII-only English words used as fallback", () => {
     // Heuristic: a Bengali field shouldn't be a pure ASCII string (would mean
     // the author copy-pasted English as the "translation").
-    const asciiOnly = /^[\x00-\x7F]+$/;
+    const asciiOnly = /^[\\x00-\\x7F]+$/;
     const offenders: string[] = [];
     for (const v of fleetVideos) if (v.labelBn && asciiOnly.test(v.labelBn)) offenders.push(`video:${v.label}`);
     for (const c of equipmentCategories) if (asciiOnly.test(c.bangla)) offenders.push(`cat:${c.slug}`);
