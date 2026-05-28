@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { MapPin } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -14,7 +15,7 @@ const groupOrder = [
 
 export default function Projects() {
   const { t, lang } = useLang();
-  const groups = groupOrder.map(g => ({ ...g, items: projectsData.filter(p => p.type === g.type) }));
+  const groups = useMemo(() => groupOrder.map(g => ({ ...g, items: projectsData.filter(p => p.type === g.type) })), []);
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Navbar />
