@@ -54,16 +54,20 @@ export default function HeroSection() {
         </div>
 
         {/* Stats */}
-        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 max-w-2xl">
+        <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 md:gap-8 max-w-3xl">
           {[
             { value: "26+", label: t("Years Experience", "বছরের অভিজ্ঞতা") },
             { value: "30+", label: t("Equipment Units", "ইকুইপমেন্ট ইউনিট") },
             { value: "25", label: t("Skilled Staff", "দক্ষ কর্মী") },
             { value: "2", label: t("Office Locations", "অফিস") },
-          ].map(stat => (
-            <div key={stat.label} className="glass-card rounded-xl p-4 hover:bg-white/10 transition-all">
-              <div className="text-2xl md:text-3xl font-bold text-orange-400">{stat.value}</div>
-              <div className="text-xs text-white/50 mt-1 tracking-wide">{stat.label}</div>
+          ].map((stat, idx) => (
+            <div
+              key={stat.label}
+              className="glass-card rounded-2xl p-5 hover:bg-white/[0.08] hover:border-orange-500/30 hover:shadow-[0_10px_30px_-10px_rgba(245,130,32,0.15)] hover:-translate-y-1 transition-all duration-300"
+              style={{ animationDelay: `${idx * 100}ms` }}
+            >
+              <div className="text-3xl md:text-4xl font-black tracking-tight text-gradient mb-1.5">{stat.value}</div>
+              <div className="text-[10px] sm:text-xs font-semibold text-white/60 tracking-[0.1em] uppercase">{stat.label}</div>
             </div>
           ))}
         </div>
