@@ -1,0 +1,3 @@
+## 2024-11-20 - Missing Focus States & Title Attributes on Icon-Only Buttons
+**Learning:** Found a pattern across header/nav components (`Navbar`, `CartDrawer`) where icon-only buttons (like social links, language toggle, and cart buttons) missed proper focus states (`focus-visible`) and hover/tooltip (`title`) attributes, despite having `aria-label` in some cases. This makes keyboard navigation unclear and mouse interaction lack immediate context.
+**Action:** Added `focus-visible` outline styles, `title` attributes, and `aria-label` where missing to icon buttons in the header/nav areas. Future PRs should check for this pattern on newly added interactive elements.
