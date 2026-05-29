@@ -12,7 +12,8 @@ export function CartButton() {
     <button
       onClick={() => setOpen(true)}
       aria-label={t("Open cart", "কার্ট খুলুন")}
-      className="relative w-10 h-10 rounded-full glass hover:bg-white/15 flex items-center justify-center text-white transition-colors"
+      title={t("Open cart", "কার্ট খুলুন")}
+      className="relative w-10 h-10 rounded-full glass hover:bg-white/15 flex items-center justify-center text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
     >
       <ShoppingCart className="w-4 h-4" />
       {count > 0 && (
@@ -87,7 +88,7 @@ export default function CartDrawer() {
                 <h3 className="font-display font-bold text-lg text-white">{t("Quotation Cart", "কোটেশন কার্ট")}</h3>
                 <span className="px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-300 text-[10px] font-bold">{count} {t("Unit(s)", "ইউনিট")}</span>
               </div>
-              <button onClick={() => setOpen(false)} aria-label={t("Close", "বন্ধ")} className="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center text-white/70">
+              <button onClick={() => setOpen(false)} aria-label={t("Close", "বন্ধ")} title={t("Close", "বন্ধ")} className="w-9 h-9 rounded-full hover:bg-white/10 flex items-center justify-center text-white/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50">
                 <X className="w-5 h-5" />
               </button>
             </header>

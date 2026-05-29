@@ -55,8 +55,9 @@ export default function Navbar() {
             {/* Language Toggle */}
             <button
               onClick={() => setLang(lang === "en" ? "bn" : "en")}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-full glass text-xs font-semibold text-white/80 hover:text-white hover:bg-white/10 transition-all"
-              aria-label="Toggle language"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-full glass text-xs font-semibold text-white/80 hover:text-white hover:bg-white/10 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+              aria-label={t("Toggle language", "ভাষা পরিবর্তন করুন")}
+              title={lang === "en" ? "Change to Bengali" : "Change to English"}
             >
               <Globe className="w-3.5 h-3.5" />
               <span className={lang === "en" ? "text-orange-400" : "text-white/60"}>EN</span>
@@ -64,13 +65,13 @@ export default function Navbar() {
               <span className={lang === "bn" ? "text-orange-400" : "text-white/60"}>বাং</span>
             </button>
 
-            <a href="https://www.facebook.com/atdbtrade" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white hover:bg-blue-500 transition-colors">
+            <a href="https://www.facebook.com/atdbtrade" target="_blank" rel="noopener noreferrer" aria-label={t("Visit our Facebook page", "আমাদের ফেসবুক পেজে যান")} title={t("Visit our Facebook page", "আমাদের ফেসবুক পেজে যান")} className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white hover:bg-blue-500 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
             </a>
-            <a href="tel:+8801712106242" className="w-9 h-9 rounded-full bg-green-600 flex items-center justify-center text-white hover:bg-green-500 transition-colors">
+            <a href="tel:+8801712106242" aria-label={t("Call us", "আমাদের কল করুন")} title={t("Call us", "আমাদের কল করুন")} className="w-9 h-9 rounded-full bg-green-600 flex items-center justify-center text-white hover:bg-green-500 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
               <Phone className="w-4 h-4" />
             </a>
-            <a href="mailto:saifulaapi@gmail.com" className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors">
+            <a href="mailto:saifulaapi@gmail.com" aria-label={t("Email us", "আমাদের ইমেইল করুন")} title={t("Email us", "আমাদের ইমেইল করুন")} className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
               <Mail className="w-4 h-4" />
             </a>
             <a href={getWhatsAppQuoteUrl()} target="_blank" rel="noopener noreferrer" className="ml-2 flex items-center gap-2 px-5 py-2.5 rounded-full bg-orange-500 text-white text-sm font-semibold hover:bg-orange-400 transition-all shadow-lg shadow-orange-500/25 hover:shadow-orange-400/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-2 focus-visible:ring-offset-background">
@@ -84,12 +85,19 @@ export default function Navbar() {
             <CartButton />
             <button
               onClick={() => setLang(lang === "en" ? "bn" : "en")}
-              className="flex items-center gap-1 px-2.5 py-1.5 rounded-full glass text-[10px] font-semibold text-white/80"
+              aria-label={t("Toggle language", "ভাষা পরিবর্তন করুন")}
+              title={lang === "en" ? "Change to Bengali" : "Change to English"}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-full glass text-[10px] font-semibold text-white/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
             >
               <Globe className="w-3 h-3" />
               {lang === "en" ? "বাং" : "EN"}
             </button>
-            <button onClick={() => setIsOpen(!isOpen)} className="w-10 h-10 flex items-center justify-center text-white">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              aria-label={isOpen ? t("Close menu", "মেনু বন্ধ করুন") : t("Open menu", "মেনু খুলুন")}
+              title={isOpen ? t("Close menu", "মেনু বন্ধ করুন") : t("Open menu", "মেনু খুলুন")}
+              className="w-10 h-10 flex items-center justify-center text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 rounded-full"
+            >
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
